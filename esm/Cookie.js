@@ -28,4 +28,13 @@ export function setCookie(key, value, options) {
         requests.push("samesite=" + samesite);
     document.cookie = requests.join('; ');
 }
+export function getCookieAs(key) {
+    var value = getCookie(key);
+    if (value)
+        return JSON.parse(decodeURIComponent(value));
+    return null;
+}
+export function setCookieAs(key, value) {
+    setCookie(key, encodeURIComponent(JSON.stringify(value)));
+}
 //# sourceMappingURL=Cookie.js.map

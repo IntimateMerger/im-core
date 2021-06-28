@@ -11,4 +11,14 @@ export function setLocalStorage(key, value) {
         console.error(e);
     }
 }
+export function getLocalStorageAs(key) {
+    var value = getLocalStorage(key);
+    if (value)
+        return JSON.parse(value);
+    else
+        return null;
+}
+export function setLocalStorageAs(key, value) {
+    setLocalStorage(key, JSON.stringify(value));
+}
 //# sourceMappingURL=LocalStorage.js.map
