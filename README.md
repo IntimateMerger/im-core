@@ -1,1 +1,1 @@
-# im-core-js
+# im-core
