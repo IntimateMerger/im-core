@@ -35,7 +35,7 @@ export function setCookie(key: string, value: string, options: CookieOption = {}
   } = options;
 
   if (path) requests.push(`path=${path}`);
-  if (domain) requests.push(`path=${domain}`);
+  if (domain) requests.push(`domain=${domain}`);
   if (typeof maxAge === 'number') requests.push(`max-age=${maxAge}`);
   if (expires) requests.push(`expires=${expires.toUTCString()}`);
   if (secure) requests.push('secure');
