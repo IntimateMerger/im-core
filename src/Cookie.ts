@@ -1,4 +1,4 @@
-export function getCookie(key: string): string | null{
+export function getCookie(key: string): string | null {
   const keyPrefix = `${key}=`;
   const charCount = keyPrefix.length;
   const cookieList = document.cookie.split('; ');
@@ -42,4 +42,15 @@ export function setCookie(key: string, value: string, options: CookieOption = {}
   if (samesite) requests.push(`samesite=${samesite}`);
 
   document.cookie = requests.join('; ');
+}
+
+export function getCookieAs<T = unknown>(key: string): T | null {
+  const value = getCookie(key);
+
+  if (value) return JSON.parse(decodeURIComponent(value)) as T;
+  return null;
+}
+
+export function setCookieAs<T = unknown>(key: string, value: T) {
+  setCookie(key, encodeURIComponent(JSON.stringify(value)));
 }
