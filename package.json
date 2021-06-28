@@ -2,11 +2,15 @@
   "name": "@intimatemerger/im-core",
   "version": "0.0.1",
   "main": "cjs/index.js",
-  "module": "esm/index.js",
   "files": [
     "cjs",
     "esm"
   ],
+  "type": "module",
+  "exports": {
+    "import": "./esm/index.js",
+    "require": "./cjs/index.js"
+  },
   "repository": "git@github.com:IntimateMerger/im-core-js.git",
   "private": true,
   "license": "UNLICENSED",
