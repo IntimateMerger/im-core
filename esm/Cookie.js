@@ -17,7 +17,7 @@ export function setCookie(key, value, options) {
     if (path)
         requests.push("path=" + path);
     if (domain)
-        requests.push("path=" + domain);
+        requests.push("domain=" + domain);
     if (typeof maxAge === 'number')
         requests.push("max-age=" + maxAge);
     if (expires)
