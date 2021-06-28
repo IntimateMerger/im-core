@@ -1,0 +1,8 @@
+{
+  "name": "@intimatemerger/im-core",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "git@github.com:IntimateMerger/im-core-js.git",
+  "private": true,
+  "license": "UNLICENSED"
+}
