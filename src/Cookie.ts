@@ -3,7 +3,7 @@ export function getCookie(key: string): string | null {
   const charCount = keyPrefix.length;
   const cookieList = document.cookie.split('; ');
 
-  for (let i = 0, len = cookieList.length, keyAndValue; i < len; i++ ) {
+  for (let i = 0, len = cookieList.length, keyAndValue; i < len; i++) {
     keyAndValue = cookieList[i];
     if (keyAndValue.substr(0, charCount) === keyPrefix) {
       return keyAndValue.slice(charCount);
@@ -22,17 +22,14 @@ interface CookieOption {
   samesite?: 'strict' | 'lax';
 }
 
-export function setCookie(key: string, value: string, options: CookieOption = {}) {
+export function setCookie(
+  key: string,
+  value: string,
+  options: CookieOption = {}
+) {
   const requests = [`${key}=${value}`];
 
-  const {
-    path,
-    domain,
-    maxAge,
-    expires,
-    secure,
-    samesite,
-  } = options;
+  const {path, domain, maxAge, expires, secure, samesite} = options;
 
   if (path) requests.push(`path=${path}`);
   if (domain) requests.push(`domain=${domain}`);
