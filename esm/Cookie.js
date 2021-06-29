@@ -28,6 +28,11 @@ export function setCookie(key, value, options) {
         requests.push("samesite=" + samesite);
     document.cookie = requests.join('; ');
 }
+export function deleteCookie(key) {
+    setCookie(key, '', {
+        maxAge: 0,
+    });
+}
 export function getCookieAs(key) {
     var value = getCookie(key);
     if (value)

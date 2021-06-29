@@ -1,20 +1,20 @@
 export function getItem(key) {
-    if (localStorage)
-        return localStorage.getItem(key);
+    if (sessionStorage)
+        return sessionStorage.getItem(key);
     else
         return null;
 }
 export function setItem(key, value) {
     try {
-        localStorage.setItem(key, value);
+        sessionStorage.setItem(key, value);
     }
     catch (e) {
         console.error(e);
     }
 }
 export function removeItem(key) {
-    if (localStorage)
-        localStorage.removeItem(key);
+    if (sessionStorage)
+        sessionStorage.removeItem(key);
 }
 export function getValue(key) {
     var value = getItem(key);
@@ -26,4 +26,4 @@ export function getValue(key) {
 export function setValue(key, value) {
     setItem(key, JSON.stringify(value));
 }
-//# sourceMappingURL=LocalStorage.js.map
+//# sourceMappingURL=SessionStorage.js.map

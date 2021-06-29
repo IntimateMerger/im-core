@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setCookieAs = exports.getCookieAs = exports.setCookie = exports.getCookie = void 0;
+exports.setCookieAs = exports.getCookieAs = exports.deleteCookie = exports.setCookie = exports.getCookie = void 0;
 function getCookie(key) {
     var keyPrefix = key + "=";
     var charCount = keyPrefix.length;
@@ -33,6 +33,12 @@ function setCookie(key, value, options) {
     document.cookie = requests.join('; ');
 }
 exports.setCookie = setCookie;
+function deleteCookie(key) {
+    setCookie(key, '', {
+        maxAge: 0,
+    });
+}
+exports.deleteCookie = deleteCookie;
 function getCookieAs(key) {
     var value = getCookie(key);
     if (value)
