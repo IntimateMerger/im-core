@@ -1,9 +1,9 @@
-export function getLocalStorage(key: string) {
-  if (localStorage) return localStorage.getItem(key) || null;
-  return null;
+export function getItem(key: string) {
+  if (localStorage) return localStorage.getItem(key);
+  else return null;
 }
 
-export function setLocalStorage(key: string, value: string) {
+export function setItem(key: string, value: string) {
   try {
     localStorage.setItem(key, value);
   } catch (e) {
@@ -11,12 +11,16 @@ export function setLocalStorage(key: string, value: string) {
   }
 }
 
-export function getLocalStorageAs<T = unknown>(key: string): T | null {
-  const value = getLocalStorage(key);
+export function removeItem(key: string) {
+  if (localStorage) localStorage.removeItem(key);
+}
+
+export function getValue<T = unknown>(key: string): T | null {
+  const value = getItem(key);
   if (value) return JSON.parse(value) as T;
   else return null;
 }
 
-export function setLocalStorageAs<T = unknown>(key: string, value: T) {
-  setLocalStorage(key, JSON.stringify(value));
+export function setValue<T = unknown>(key: string, value: T) {
+  setItem(key, JSON.stringify(value));
 }
