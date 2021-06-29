@@ -17,6 +17,7 @@
   "scripts": {
     "lint": "gts lint",
     "clean": "gts clean",
+    "prebuild": "npm run lint",
     "build": "npm run build:cjs && npm run build:esm",
     "build:cjs": "tsc --module CommonJS --outDir cjs",
     "build:esm": "tsc --module ES6 --outDir esm",
