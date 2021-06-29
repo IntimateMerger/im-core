@@ -19,7 +19,7 @@ interface CookieOption {
   maxAge?: number;
   expires?: Date;
   secure?: boolean;
-  samesite?: 'strict' | 'lax';
+  samesite?: 'strict' | 'lax' | 'none';
 }
 
 export function setCookie(
@@ -39,6 +39,12 @@ export function setCookie(
   if (samesite) requests.push(`samesite=${samesite}`);
 
   document.cookie = requests.join('; ');
+}
+
+export function deleteCookie(key: string) {
+  setCookie(key, '', {
+    maxAge: 0,
+  });
 }
 
 export function getCookieAs<T = unknown>(key: string): T | null {
