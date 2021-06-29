@@ -20,7 +20,6 @@
     "build": "npm run build:cjs && npm run build:esm",
     "build:cjs": "tsc --module CommonJS --outDir cjs",
     "build:esm": "tsc --module ES6 --outDir esm",
-    "minify": "terser esm/*.js",
     "fix": "gts fix",
     "prepare": "npm run build",
     "pretest": "npm run build",
