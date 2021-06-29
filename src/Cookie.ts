@@ -27,18 +27,17 @@ export function setCookie(
   value: string,
   options: CookieOption = {}
 ) {
-  const requests = [`${key}=${value}`];
-
   const {path, domain, maxAge, expires, secure, samesite} = options;
 
-  if (path) requests.push(`path=${path}`);
-  if (domain) requests.push(`domain=${domain}`);
-  if (typeof maxAge === 'number') requests.push(`max-age=${maxAge}`);
-  if (expires) requests.push(`expires=${expires.toUTCString()}`);
-  if (secure) requests.push('secure');
-  if (samesite) requests.push(`samesite=${samesite}`);
+  let request = `${key}=${value}`;
+  if (path) request += `;path=${path}`;
+  if (domain) request += `;domain=${domain}`;
+  if (typeof maxAge === 'number') request += `;max-age=${maxAge}`;
+  if (expires) request += `;expires=${expires.toUTCString()}`;
+  if (secure) request += ';secure';
+  if (samesite) request += `;samesite=${samesite}`;
 
-  document.cookie = requests.join('; ');
+  document.cookie = request;
 }
 
 export function deleteCookie(key: string) {
