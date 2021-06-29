@@ -16,21 +16,21 @@ function getCookie(key) {
 exports.getCookie = getCookie;
 function setCookie(key, value, options) {
     if (options === void 0) { options = {}; }
-    var requests = [key + "=" + value];
     var path = options.path, domain = options.domain, maxAge = options.maxAge, expires = options.expires, secure = options.secure, samesite = options.samesite;
+    var request = key + "=" + value;
     if (path)
-        requests.push("path=" + path);
+        request += ";path=" + path;
     if (domain)
-        requests.push("domain=" + domain);
+        request += ";domain=" + domain;
     if (typeof maxAge === 'number')
-        requests.push("max-age=" + maxAge);
+        request += ";max-age=" + maxAge;
     if (expires)
-        requests.push("expires=" + expires.toUTCString());
+        request += ";expires=" + expires.toUTCString();
     if (secure)
-        requests.push('secure');
+        request += ';secure';
     if (samesite)
-        requests.push("samesite=" + samesite);
-    document.cookie = requests.join('; ');
+        request += ";samesite=" + samesite;
+    document.cookie = request;
 }
 exports.setCookie = setCookie;
 function deleteCookie(key) {
