@@ -1,3 +1,3 @@
 export * as Cookie from './Cookie';
 export * as LocalStorage from './LocalStorage';
-export * as sessionStorage from './SessionStorage';
+export * as SessionStorage from './SessionStorage';
