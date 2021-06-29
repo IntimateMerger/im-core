@@ -16,7 +16,7 @@ function getCookie(key) {
 exports.getCookie = getCookie;
 function setCookie(key, value, options) {
     if (options === void 0) { options = {}; }
-    var path = options.path, domain = options.domain, maxAge = options.maxAge, expires = options.expires, secure = options.secure, samesite = options.samesite;
+    var path = options.path, domain = options.domain, maxAge = options.maxAge, expires = options.expires, secure = options.secure, sameSite = options.sameSite;
     var request = key + "=" + value;
     if (path)
         request += ";path=" + path;
@@ -28,8 +28,8 @@ function setCookie(key, value, options) {
         request += ";expires=" + expires.toUTCString();
     if (secure)
         request += ';secure';
-    if (samesite)
-        request += ";samesite=" + samesite;
+    if (sameSite)
+        request += ";samesite=" + sameSite;
     document.cookie = request;
 }
 exports.setCookie = setCookie;

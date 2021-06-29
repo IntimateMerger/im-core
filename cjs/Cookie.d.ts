@@ -5,7 +5,7 @@ interface CookieOption {
     maxAge?: number;
     expires?: Date;
     secure?: boolean;
-    samesite?: 'strict' | 'lax' | 'none';
+    sameSite?: 'strict' | 'lax' | 'none';
 }
 export declare function setCookie(key: string, value: string, options?: CookieOption): void;
 export declare function deleteCookie(key: string): void;
