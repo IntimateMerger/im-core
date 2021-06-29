@@ -19,7 +19,7 @@ interface CookieOption {
   maxAge?: number;
   expires?: Date;
   secure?: boolean;
-  samesite?: 'strict' | 'lax' | 'none';
+  sameSite?: 'strict' | 'lax' | 'none';
 }
 
 export function setCookie(
@@ -27,7 +27,7 @@ export function setCookie(
   value: string,
   options: CookieOption = {}
 ) {
-  const {path, domain, maxAge, expires, secure, samesite} = options;
+  const {path, domain, maxAge, expires, secure, sameSite} = options;
 
   let request = `${key}=${value}`;
   if (path) request += `;path=${path}`;
@@ -35,7 +35,7 @@ export function setCookie(
   if (typeof maxAge === 'number') request += `;max-age=${maxAge}`;
   if (expires) request += `;expires=${expires.toUTCString()}`;
   if (secure) request += ';secure';
-  if (samesite) request += `;samesite=${samesite}`;
+  if (sameSite) request += `;samesite=${sameSite}`;
 
   document.cookie = request;
 }
