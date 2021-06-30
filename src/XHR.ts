@@ -8,7 +8,7 @@ interface GetOptions {
 export function get(
   url: string,
   onLoad: (responseText: string) => unknown,
-  options: GetOptions
+  options: GetOptions = {}
 ): XMLHttpRequest {
   const {onError, onTimeout, timeout, withCredentials} = options;
 
@@ -40,7 +40,7 @@ export function get(
 export function getValueAs<T = unknown>(
   url: string,
   onLoad: (value: T) => unknown,
-  options: GetOptions
+  options: GetOptions = {}
 ) {
   return get(
     url,
