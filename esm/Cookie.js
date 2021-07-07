@@ -28,9 +28,12 @@ export function setCookie(key, value, options) {
         request += ";samesite=" + sameSite;
     document.cookie = request;
 }
-export function deleteCookie(key) {
+export function deleteCookie(key, options) {
+    if (options === void 0) { options = {}; }
     setCookie(key, '', {
         maxAge: 0,
+        path: options.path,
+        domain: options.domain,
     });
 }
 export function getCookieAs(key) {

@@ -33,9 +33,12 @@ function setCookie(key, value, options) {
     document.cookie = request;
 }
 exports.setCookie = setCookie;
-function deleteCookie(key) {
+function deleteCookie(key, options) {
+    if (options === void 0) { options = {}; }
     setCookie(key, '', {
         maxAge: 0,
+        path: options.path,
+        domain: options.domain,
     });
 }
 exports.deleteCookie = deleteCookie;
