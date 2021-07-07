@@ -13,19 +13,17 @@ export function getCookie(key: string): string | null {
   return null;
 }
 
-interface CookieOption {
-  path?: string;
-  domain?: string;
-  maxAge?: number;
-  expires?: Date;
-  secure?: boolean;
-  sameSite?: 'strict' | 'lax' | 'none';
-}
-
 export function setCookie(
   key: string,
   value: string,
-  options: CookieOption = {}
+  options: {
+    path?: string;
+    domain?: string;
+    maxAge?: number;
+    expires?: Date;
+    secure?: boolean;
+    sameSite?: 'strict' | 'lax' | 'none';
+  } = {}
 ) {
   const {path, domain, maxAge, expires, secure, sameSite} = options;
 
@@ -40,9 +38,17 @@ export function setCookie(
   document.cookie = request;
 }
 
-export function deleteCookie(key: string) {
+export function deleteCookie(
+  key: string,
+  options: {
+    path?: string;
+    domain?: string;
+  } = {}
+) {
   setCookie(key, '', {
     maxAge: 0,
+    path: options.path,
+    domain: options.domain,
   });
 }
 
