@@ -42,7 +42,8 @@ export function getCookieAs(key) {
         return JSON.parse(decodeURIComponent(value));
     return null;
 }
-export function setCookieAs(key, value) {
-    setCookie(key, encodeURIComponent(JSON.stringify(value)));
+export function setCookieAs(key, value, options) {
+    if (options === void 0) { options = {}; }
+    setCookie(key, encodeURIComponent(JSON.stringify(value)), options);
 }
 //# sourceMappingURL=Cookie.js.map
