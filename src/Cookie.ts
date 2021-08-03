@@ -1,3 +1,12 @@
+interface SetCookieOption {
+  path?: string;
+  domain?: string;
+  maxAge?: number;
+  expires?: Date;
+  secure?: boolean;
+  sameSite?: 'strict' | 'lax' | 'none';
+}
+
 export function getCookie(key: string): string | null {
   const keyPrefix = `${key}=`;
   const charCount = keyPrefix.length;
@@ -16,14 +25,7 @@ export function getCookie(key: string): string | null {
 export function setCookie(
   key: string,
   value: string,
-  options: {
-    path?: string;
-    domain?: string;
-    maxAge?: number;
-    expires?: Date;
-    secure?: boolean;
-    sameSite?: 'strict' | 'lax' | 'none';
-  } = {}
+  options: SetCookieOption = {}
 ) {
   const {path, domain, maxAge, expires, secure, sameSite} = options;
 
@@ -59,6 +61,10 @@ export function getCookieAs<T = unknown>(key: string): T | null {
   return null;
 }
 
-export function setCookieAs<T = unknown>(key: string, value: T) {
-  setCookie(key, encodeURIComponent(JSON.stringify(value)));
+export function setCookieAs<T = unknown>(
+  key: string,
+  value: T,
+  options: SetCookieOption = {}
+) {
+  setCookie(key, encodeURIComponent(JSON.stringify(value)), options);
 }
