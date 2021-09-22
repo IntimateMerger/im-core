@@ -1,6 +1,6 @@
 {
   "name": "@intimatemerger/im-core",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "main": "./cjs/index.js",
   "types": "./cjs/index.d.js",
   "files": [
