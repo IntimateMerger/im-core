@@ -34,6 +34,8 @@ export function deleteCookie(key, options) {
         maxAge: 0,
         path: options.path,
         domain: options.domain,
+        secure: options.secure,
+        sameSite: options.sameSite,
     });
 }
 export function getCookieAs(key) {
