@@ -45,12 +45,16 @@ export function deleteCookie(
   options: {
     path?: string;
     domain?: string;
+    secure?: boolean;
+    sameSite?: 'strict' | 'lax' | 'none';
   } = {}
 ) {
   setCookie(key, '', {
     maxAge: 0,
     path: options.path,
     domain: options.domain,
+    secure: options.secure,
+    sameSite: options.sameSite,
   });
 }
 
