@@ -14,9 +14,9 @@ export function get(url, onLoad, options) {
             onTimeout();
         });
     xhr.withCredentials = !!withCredentials;
+    xhr.open('GET', url, true);
     if (typeof timeout === 'number')
         xhr.timeout = timeout;
-    xhr.open('GET', url, true);
     xhr.send();
     return xhr;
 }
