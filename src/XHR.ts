@@ -29,9 +29,11 @@ export function get(
     });
 
   xhr.withCredentials = !!withCredentials;
-  if (typeof timeout === 'number') xhr.timeout = timeout;
 
   xhr.open('GET', url, true);
+
+  if (typeof timeout === 'number') xhr.timeout = timeout;
+
   xhr.send();
 
   return xhr;
