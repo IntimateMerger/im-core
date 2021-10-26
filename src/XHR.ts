@@ -14,19 +14,19 @@ export function get(
 
   const xhr = new XMLHttpRequest();
 
-  xhr.addEventListener('load', () => {
+  xhr.onload = () => {
     onLoad(xhr.responseText);
-  });
+  };
 
   if (onError)
-    xhr.addEventListener('error', () => {
+    xhr.onerror = () => {
       onError();
-    });
+    };
 
   if (onTimeout)
-    xhr.addEventListener('timeout', () => {
+    xhr.ontimeout = () => {
       onTimeout();
-    });
+    };
 
   xhr.withCredentials = !!withCredentials;
 
