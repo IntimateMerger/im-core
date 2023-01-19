@@ -25,6 +25,7 @@ type XHRRequestOptions = {
  * XMLHttpRequestを使用したリクエストを送信する糖衣関数です。
  * @param params {XHRParams} withCredentialsとasyncが未設定の場合trueとします。
  * @returns {XMLHttpRequest}
+ * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
  */
 export function xhrRequest(params: XHRParams) {
   const {
@@ -71,7 +72,7 @@ export function xhrRequest(params: XHRParams) {
  * @param onLoad
  * @param XHRRequestOptions
  * @returns {XMLHttpRequest}
- * @throws {InvalidAccessError | InvalidStateError}
+ * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
  */
 export function get(
   url: string,
@@ -97,7 +98,7 @@ export function get(
  * @param onLoad {(data: T) => unknwon}
  * @param XHRRequestOptions
  * @returns {XMLHttpRequest}
- * @throws {SyntaxError}
+ * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
  */
 export function getData<Response>(
   url: string,
@@ -125,7 +126,8 @@ export function getData<Response>(
  * @param body
  * @param onLoad
  * @param xhrRequestOptions
- * @returns
+ * @returns {XMLHttpRequest}
+ * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
  */
 export function post(
   url: string,
@@ -151,6 +153,7 @@ export function post(
  * @param onLoad
  * @param xhrRequestOptions
  * @returns {XMLHttpRequest}
+ * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
  */
 export function postDataAsJson<T extends Record<string, unknown>>(
   url: string,
@@ -175,6 +178,7 @@ export function postDataAsJson<T extends Record<string, unknown>>(
  * @param onLoad
  * @param xhrRequestOptions
  * @returns {XMLHttpRequest}
+ * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
  */
 export function postDataAsXWwwFormUrlEncoded<
   RequestBody extends Record<string, unknown>
@@ -201,6 +205,7 @@ export function postDataAsXWwwFormUrlEncoded<
  * @param onLoad
  * @param xhrRequestOptions
  * @returns {XMLHttpRequest}
+ * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
  */
 export function postDataAsMultipartFormData<
   RequestBody extends Record<string, string | Blob>
