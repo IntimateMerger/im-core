@@ -11,28 +11,30 @@ type XHRRequestOptions = {
   timeout?: number;
   withCredentials?: boolean;
   requestHeaders?: {[key: string]: string | string[]};
+  asynchronous?: boolean;
 };
 
 /**
  * XMLHttpRequestを使用したリクエストを送信する糖衣関数です。
- * @param params {XHRParams} withCredentialsが未設定の場合trueとします。
+ * @param params {XHRParams} withCredentialsとasyncが未設定の場合trueとします。
  * @returns {XMLHttpRequest}
  */
 export function xhrRequest(params: XHRParams) {
   const {
     url,
     method,
+    body = null,
     onLoad,
     onError,
     onTimeout,
     timeout,
     withCredentials = true,
     requestHeaders,
-    body = null,
+    asynchronous = true,
   } = params;
 
   const xhr = new XMLHttpRequest();
-  xhr.open(method, url);
+  xhr.open(method, url, asynchronous);
 
   xhr.withCredentials = withCredentials;
   if (typeof timeout === 'number') xhr.timeout = timeout;
@@ -62,6 +64,7 @@ export function xhrRequest(params: XHRParams) {
  * @param onLoad
  * @param XHRRequestOptions
  * @returns {XMLHttpRequest}
+ * @throws {InvalidAccessError | InvalidStateError}
  */
 export function get(
   url: string,
@@ -110,7 +113,7 @@ export function getData<Response>(
 }
 
 /**
- * XMLHttpRequestを使用し、POSTメソッドでプレーンテキストのデータを送信します。
+ * XMLHttpRequestを使用し、POSTメソッドでデータを送信します。
  * @param url
  * @param body
  * @param onLoad
@@ -119,7 +122,7 @@ export function getData<Response>(
  */
 export function post(
   url: string,
-  body: string,
+  body?: XMLHttpRequestBodyInit | null,
   onLoad?: (responseText: string) => unknown,
   xhrRequestOptions: XHRRequestOptions = {}
 ) {
@@ -148,15 +151,11 @@ export function postDataAsJson<T extends Record<string, unknown>>(
   onLoad?: (responseText: string) => unknown,
   xhrRequestOptions: XHRRequestOptions = {}
 ) {
-  return xhrRequest({
-    url,
-    method: 'POST',
+  return post(url, JSON.stringify(data), onLoad, {
     requestHeaders: {
       ...xhrRequestOptions.requestHeaders,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(data),
-    onLoad,
     ...xhrRequestOptions,
   });
 }
@@ -184,13 +183,7 @@ export function postDataAsXWwwFormUrlEncoded<
   }
 
   // bodyにURLSearchParams型が設定された場合、リクエストヘッダーに `Content-Type: application/x-www-form-urlencoded;charset=UTF-8` が設定される。
-  return xhrRequest({
-    url,
-    method: 'POST',
-    body: urlSearchParams,
-    onLoad,
-    ...xhrRequestOptions,
-  });
+  return post(url, urlSearchParams, onLoad, xhrRequestOptions);
 }
 
 /**
@@ -216,11 +209,5 @@ export function postDataAsMultipartFormData<
   }
 
   // bodyにFormData型が設定された場合、リクエストヘッダーに `Content-Type: multipart/form-data; boundary=...` が設定される。
-  return xhrRequest({
-    url,
-    method: 'POST',
-    body: formData,
-    onLoad,
-    ...xhrRequestOptions,
-  });
+  return post(url, formData, onLoad, xhrRequestOptions);
 }
