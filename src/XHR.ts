@@ -11,7 +11,7 @@ type XHRRequestOptions = {
   timeout?: number;
   withCredentials?: boolean;
   requestHeaders?: {[key: string]: string | string[]};
-}
+};
 
 /**
  * XMLHttpRequestを使用したリクエストを送信する糖衣関数です。
@@ -45,9 +45,10 @@ export function xhrRequest(params: XHRParams) {
     });
   }
 
-  if (onLoad) xhr.onload = () => {
-    onLoad(xhr.responseText);
-  };
+  if (onLoad)
+    xhr.onload = () => {
+      onLoad(xhr.responseText);
+    };
   if (onError) xhr.onerror = onError;
   if (onTimeout) xhr.ontimeout = onTimeout;
 
@@ -62,7 +63,11 @@ export function xhrRequest(params: XHRParams) {
  * @param XHRRequestOptions
  * @returns {XMLHttpRequest}
  */
-export function get(url: string, onLoad: (responseText: string) => unknown, xhrRequestOptions: XHRRequestOptions = {}) {
+export function get(
+  url: string,
+  onLoad: (responseText: string) => unknown,
+  xhrRequestOptions: XHRRequestOptions = {}
+) {
   return xhrRequest({
     url,
     method: 'GET',
@@ -84,18 +89,22 @@ export function get(url: string, onLoad: (responseText: string) => unknown, xhrR
  * @returns {XMLHttpRequest}
  * @throws {SyntaxError}
  */
-export function getData<Response>(url: string, onLoad: (data: Response) => unknown, xhrRequestOptions: XHRRequestOptions = {}) {
+export function getData<Response>(
+  url: string,
+  onLoad: (data: Response) => unknown,
+  xhrRequestOptions: XHRRequestOptions = {}
+) {
   return xhrRequest({
     url,
     method: 'GET',
-    onLoad: (responseText) => {
+    onLoad: responseText => {
       const data = JSON.parse(responseText) as Response;
       onLoad(data);
     },
     ...xhrRequestOptions,
     requestHeaders: {
       ...xhrRequestOptions.requestHeaders,
-      'Accept': 'application/json',
+      Accept: 'application/json',
     },
   });
 }
@@ -108,7 +117,12 @@ export function getData<Response>(url: string, onLoad: (data: Response) => unkno
  * @param xhrRequestOptions
  * @returns
  */
-export function post(url: string, body: string, onLoad?: (responseText: string) => unknown, xhrRequestOptions: XHRRequestOptions = {}) {
+export function post(
+  url: string,
+  body: string,
+  onLoad?: (responseText: string) => unknown,
+  xhrRequestOptions: XHRRequestOptions = {}
+) {
   // bodyがstring型の場合、リクエストヘッダーには `Content-Type: text/plain;charset=UTF-8` が設定される。
   return xhrRequest({
     url,
@@ -128,7 +142,12 @@ export function post(url: string, body: string, onLoad?: (responseText: string) 
  * @param xhrRequestOptions
  * @returns {XMLHttpRequest}
  */
-export function postDataAsJson<T extends Record<string, unknown>>(url: string, data: T, onLoad?: (responseText: string) => unknown, xhrRequestOptions: XHRRequestOptions = {}) {
+export function postDataAsJson<T extends Record<string, unknown>>(
+  url: string,
+  data: T,
+  onLoad?: (responseText: string) => unknown,
+  xhrRequestOptions: XHRRequestOptions = {}
+) {
   return xhrRequest({
     url,
     method: 'POST',
@@ -151,7 +170,14 @@ export function postDataAsJson<T extends Record<string, unknown>>(url: string, d
  * @param xhrRequestOptions
  * @returns {XMLHttpRequest}
  */
-export function postDataAsXWwwFormUrlEncoded<RequestBody extends Record<string, unknown>>(url: string, data: RequestBody, onLoad?: (responseText: string) => unknown, xhrRequestOptions: XHRRequestOptions = {}) {
+export function postDataAsXWwwFormUrlEncoded<
+  RequestBody extends Record<string, unknown>
+>(
+  url: string,
+  data: RequestBody,
+  onLoad?: (responseText: string) => unknown,
+  xhrRequestOptions: XHRRequestOptions = {}
+) {
   const urlSearchParams = new URLSearchParams();
   for (const name in data) {
     urlSearchParams.append(name, String(data[name]));
@@ -176,7 +202,14 @@ export function postDataAsXWwwFormUrlEncoded<RequestBody extends Record<string, 
  * @param xhrRequestOptions
  * @returns {XMLHttpRequest}
  */
-export function postDataAsMultipartFormData<RequestBody extends Record<string, string | Blob>>(url: string, data: RequestBody, onLoad?: (responseText: string) => unknown, xhrRequestOptions: XHRRequestOptions = {}) {
+export function postDataAsMultipartFormData<
+  RequestBody extends Record<string, string | Blob>
+>(
+  url: string,
+  data: RequestBody,
+  onLoad?: (responseText: string) => unknown,
+  xhrRequestOptions: XHRRequestOptions = {}
+) {
   const formData = new FormData();
   for (const name in data) {
     formData.append(name, data[name]);
