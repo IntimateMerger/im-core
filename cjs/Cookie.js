@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setCookieAs = exports.getCookieAs = exports.deleteCookie = exports.setCookie = exports.getCookie = void 0;
 function getCookie(key) {
-    var keyPrefix = key + "=";
+    var keyPrefix = "".concat(key, "=");
     var charCount = keyPrefix.length;
     var cookieList = document.cookie.split('; ');
     for (var i = 0, len = cookieList.length, keyAndValue = void 0; i < len; i++) {
@@ -17,19 +17,19 @@ exports.getCookie = getCookie;
 function setCookie(key, value, options) {
     if (options === void 0) { options = {}; }
     var path = options.path, domain = options.domain, maxAge = options.maxAge, expires = options.expires, secure = options.secure, sameSite = options.sameSite;
-    var request = key + "=" + value;
+    var request = "".concat(key, "=").concat(value);
     if (path)
-        request += ";path=" + path;
+        request += ";path=".concat(path);
     if (domain)
-        request += ";domain=" + domain;
+        request += ";domain=".concat(domain);
     if (typeof maxAge === 'number')
-        request += ";max-age=" + maxAge;
+        request += ";max-age=".concat(maxAge);
     if (expires)
-        request += ";expires=" + expires.toUTCString();
+        request += ";expires=".concat(expires.toUTCString());
     if (secure)
         request += ';secure';
     if (sameSite)
-        request += ";samesite=" + sameSite;
+        request += ";samesite=".concat(sameSite);
     document.cookie = request;
 }
 exports.setCookie = setCookie;
