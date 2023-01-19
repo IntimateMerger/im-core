@@ -6,8 +6,12 @@ export function sendBeacon(url: string, body?: Body): boolean {
   if (navigator.sendBeacon) {
     return navigator.sendBeacon(url, body);
   } else {
-    const xhr = post(url, body, void 0, {asynchronous: false});
-    return xhr.status === 200;
+    try {
+      post(url, body, void 0, {asynchronous: false});
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
 
