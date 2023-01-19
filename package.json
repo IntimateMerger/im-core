@@ -7,7 +7,7 @@
     "cjs",
     "esm"
   ],
-  "repository": "git@github.com:IntimateMerger/im-core-js.git",
+  "repository": "git@github.com:IntimateMerger/im-core.git",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^14.11.2",
