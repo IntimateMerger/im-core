@@ -4,8 +4,8 @@ exports.sendBeaconAsJson = exports.sendBeaconAsMultipartFormData = exports.sendB
 var XHR_1 = require("./XHR");
 /**
  * navigator.sendBeaconを糖衣する関数で、sendBeaconが使用できない場合XHRにフォールバックします。
- * @param url
- * @param body {Blob | string | FormData | URLSearchParams} 型によってContent-Typeとペイロードが変化します。Blob型はそのtypeに応じ、stirngはtext/plain、FormDataはmultipart/form-data、URLSearchParamsはapplication/x-www-form-urlencodedとして送信されます。
+ * @param {string} url
+ * @param {(Blob | string | FormData | URLSearchParams)} body 型によってContent-Typeとペイロードが変化します。Blob型はそのtypeに応じ、stirngはtext/plain、FormDataはmultipart/form-data、URLSearchParamsはapplication/x-www-form-urlencodedとして送信されます。
  * @returns {boolean}
  */
 function sendBeacon(url, body) {
@@ -25,8 +25,9 @@ function sendBeacon(url, body) {
 exports.sendBeacon = sendBeacon;
 /**
  * データをURLSearchParamsに変換し、sendBeacon関数を実行、application/x-www-form-urlencodedとしてデータを送信します。
- * @param url
- * @param data
+ * @template T - extends Record<string, unknown>
+ * @param {string} url
+ * @param {T} data
  * @returns {boolean}
  */
 function sendBeaconAsXWwwUrlEncoded(url, data) {
@@ -39,9 +40,10 @@ function sendBeaconAsXWwwUrlEncoded(url, data) {
 exports.sendBeaconAsXWwwUrlEncoded = sendBeaconAsXWwwUrlEncoded;
 /**
  * データをFormDataに変換し、sendBeacon関数を実行、multipart/form-dataとしてデータを送信します。
- * @param url
- * @param data
- * @returns
+ * @template T - extends Record<string, unknown>
+ * @param {string} url
+ * @param {T} data
+ * @returns {boolean}
  */
 function sendBeaconAsMultipartFormData(url, data) {
     var formData = new FormData();
@@ -52,10 +54,11 @@ function sendBeaconAsMultipartFormData(url, data) {
 }
 exports.sendBeaconAsMultipartFormData = sendBeaconAsMultipartFormData;
 /**
- *
- * @param url データをBlob(type: 'application/json')に変換し、sendBeacon関数を実行、application/jsonとしてデータを送信します。
- * @param data
- * @returns
+ * データをJSON.stringifyしたBlobに変換し、sendBeacon関数を実行、application/jsonとしてデータを送信します。
+ * @template T - extends Record<string, unknown>
+ * @param {string} url
+ * @param {T} data
+ * @returns {boolean}
  */
 function sendBeaconAsJson(url, data) {
     var blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
