@@ -1,6 +1,6 @@
 type XHRParams = {
   url: string;
-  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  method: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE' | 'PATCH';
   body?: Document | XMLHttpRequestBodyInit | null;
   onLoad?: (responseText: string) => unknown;
   onError?: () => unknown;
