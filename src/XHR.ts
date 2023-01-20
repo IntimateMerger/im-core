@@ -9,14 +9,14 @@ type XHRParams = {
 
 type XHRRequestOptions = {
   timeout?: number;
-  withCredentials?: boolean;
   requestHeaders?: {[key: string]: string | string[]};
+  withCredentials?: boolean;
   asynchronous?: boolean;
 };
 
 /**
  * XMLHttpRequestを使用したリクエストを送信する糖衣関数です。
- * @param {XHRParams} params - withCredentialsとasyncが未設定の場合trueとします。
+ * @param {XHRParams} params - withCredentialsとasynchronousは未設定の場合trueとします。
  * @returns {XMLHttpRequest}
  * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
@@ -29,8 +29,8 @@ export function xhrRequest(params: XHRParams) {
     onError,
     onTimeout,
     timeout,
-    withCredentials = true,
     requestHeaders,
+    withCredentials = true,
     asynchronous = true,
   } = params;
 
