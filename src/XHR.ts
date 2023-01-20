@@ -1,6 +1,17 @@
+type HTTPMethod =
+  | 'GET'
+  | 'HEAD'
+  | 'POST'
+  | 'PUT'
+  | 'DELETE'
+  | 'CONNECT'
+  | 'OPTIONS'
+  | 'TRACE'
+  | 'PATCH';
+
 type XHRParams = {
   url: string;
-  method: 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE' | 'PATCH';
+  method: HTTPMethod;
   body?: Document | XMLHttpRequestBodyInit | null;
   onLoad?: (responseText: string) => unknown;
   onError?: () => unknown;
