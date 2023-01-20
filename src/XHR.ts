@@ -16,9 +16,9 @@ type XHRRequestOptions = {
 
 /**
  * XMLHttpRequestを使用したリクエストを送信する糖衣関数です。
- * @param params {XHRParams} withCredentialsとasyncが未設定の場合trueとします。
+ * @param {XHRParams} params - withCredentialsとasyncが未設定の場合trueとします。
  * @returns {XMLHttpRequest}
- * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
+ * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function xhrRequest(params: XHRParams) {
   const {
@@ -61,11 +61,11 @@ export function xhrRequest(params: XHRParams) {
 
 /**
  * XMLHttpRequestを使用し単純なGETリクエストを送信します。
- * @param url
- * @param onLoad
- * @param XHRRequestOptions
+ * @param {string} url
+ * @param {function} onLoad
+ * @param {XHRRequestOptions} xhrRequestOptions
  * @returns {XMLHttpRequest}
- * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
+ * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function get(
   url: string,
@@ -87,11 +87,11 @@ export function get(
  * リクエストヘッダーは `Accept: application/json` を設定します。
  * 受け取ったレスポンスはJSON.parse処理し、onLoad引数にコールバックします。
  * 期待されるデータ型はジェネリクスで指定する事ができます。
- * @param url
- * @param onLoad {(data: T) => unknwon}
- * @param XHRRequestOptions
+ * @param {string} url
+ * @param {function} onLoad
+ * @param {XHRRequestOptions} xhrRequestOptions
  * @returns {XMLHttpRequest}
- * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
+ * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function getData<Response>(
   url: string,
@@ -115,12 +115,12 @@ export function getData<Response>(
 
 /**
  * XMLHttpRequestを使用し、POSTメソッドでデータを送信します。
- * @param url
- * @param body
- * @param onLoad
- * @param xhrRequestOptions
+ * @param {string} url
+ * @param {string} body
+ * @param {function} onLoad
+ * @param {XHRRequestOptions} xhrRequestOptions
  * @returns {XMLHttpRequest}
- * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
+ * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function post(
   url: string,
@@ -141,12 +141,13 @@ export function post(
 /**
  * XMLHttpRequestを使用し、POSTメソッドでJSON形式のデータを送信します。
  * リクエストヘッダーには `Content-Type: application/json` を設定します。
- * @param url
- * @param data
- * @param onLoad
- * @param xhrRequestOptions
+ * @template T - extends Record<string, unknown>
+ * @param {string} url
+ * @param {T} data
+ * @param {function} onLoad
+ * @param {XHRRequestOptions} xhrRequestOptions
  * @returns {XMLHttpRequest}
- * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
+ * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function postDataAsJson<T extends Record<string, unknown>>(
   url: string,
@@ -166,12 +167,13 @@ export function postDataAsJson<T extends Record<string, unknown>>(
 /**
  * XMLHttpRequestを使用し、POSTメソッドでapplication/x-www-form-urlencoded形式のデータを送信します。
  * リクエストヘッダーには `Content-Type: application/x-www-form-urlencoded;charset=UTF-8` が設定されます。
- * @param url
- * @param data
- * @param onLoad
- * @param xhrRequestOptions
+ * @template RequestBody - extends Record<string, unknown>
+ * @param {string} url
+ * @param {RequestBody} data
+ * @param {function} onLoad
+ * @param {XHRRequestOptions} xhrRequestOptions
  * @returns {XMLHttpRequest}
- * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
+ * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function postDataAsXWwwFormUrlEncoded<
   RequestBody extends Record<string, unknown>
@@ -193,12 +195,13 @@ export function postDataAsXWwwFormUrlEncoded<
 /**
  * XMLHttpRequestを使用し、POSTメソッドでmultipart/form-data形式のデータを送信します。
  * リクエストヘッダーには `Content-Type: multipart/form-data; boundary=...` が設定されます。
- * @param url
- * @param data
- * @param onLoad
- * @param xhrRequestOptions
+ * @template RequestBody - extends Record<string, string | Blob>
+ * @param {string} url
+ * @param {RequestBody} data
+ * @param {function} onLoad
+ * @param {XHRRequestOptions} xhrRequestOptions
  * @returns {XMLHttpRequest}
- * @throws {SyntaxError | SecurityError | InvalidAccessError | InvalidStateError}
+ * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function postDataAsMultipartFormData<
   RequestBody extends Record<string, string | Blob>
