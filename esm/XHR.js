@@ -10,9 +10,8 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 /**
- * XMLHttpRequestを使用したリクエストを送信する糖衣関数です。
- * @param {XHRParams} params - withCredentialsとasynchronousは未設定の場合trueとします。
- * @returns {XMLHttpRequest}
+ * Sends a request using XMLHttpRequest
+ * @param params - withCredentials and asynchronous are true if not set.
  * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function xhrRequest(params) {
@@ -44,11 +43,10 @@ export function xhrRequest(params) {
     return xhr;
 }
 /**
- * XMLHttpRequestを使用し単純なGETリクエストを送信します。
- * @param {string} url
- * @param {function} onLoad
- * @param {XHRRequestOptions} xhrRequestOptions
- * @returns {XMLHttpRequest}
+ * Sends a GET request using XMLHttpRequest
+ * @param url
+ * @param onLoad
+ * @param xhrRequestOptions
  * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function get(url, onLoad, xhrRequestOptions) {
@@ -58,14 +56,13 @@ export function get(url, onLoad, xhrRequestOptions) {
         } }, xhrRequestOptions));
 }
 /**
- * XMLHttpRequestを使用し、GETメソッドでリクエストを送信します。
- * リクエストヘッダーは `Accept: application/json` を設定します。
- * 受け取ったレスポンスはJSON.parse処理し、onLoad引数にコールバックします。
- * 期待されるデータ型はジェネリクスで指定する事ができます。
- * @param {string} url
- * @param {function} onLoad
- * @param {XHRRequestOptions} xhrRequestOptions
- * @returns {XMLHttpRequest}
+ * Use XMLHttpRequest and send the request with the GET method.
+ * Set the request header to `Accept: application/json`.
+ * The received response is processed as JSON.parse and called back in the onLoad argument.
+ * The expected data type can be specified by generics.
+ * @param url
+ * @param onLoad
+ * @param xhrRequestOptions
  * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function getData(url, onLoad, xhrRequestOptions) {
@@ -76,28 +73,25 @@ export function getData(url, onLoad, xhrRequestOptions) {
         } }, xhrRequestOptions), { requestHeaders: __assign(__assign({}, xhrRequestOptions.requestHeaders), { Accept: 'application/json' }) }));
 }
 /**
- * XMLHttpRequestを使用し、POSTメソッドでデータを送信します。
- * @param {string} url
- * @param {string} body
- * @param {function} onLoad
- * @param {XHRRequestOptions} xhrRequestOptions
- * @returns {XMLHttpRequest}
+ * Use XMLHttpRequest and send data with the POST method.
+ * @param url
+ * @param body
+ * @param onLoad
+ * @param xhrRequestOptions
  * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function post(url, body, onLoad, xhrRequestOptions) {
     if (xhrRequestOptions === void 0) { xhrRequestOptions = {}; }
-    // bodyがstring型の場合、リクエストヘッダーには `Content-Type: text/plain;charset=UTF-8` が設定される。
+    // If body is a string type, the request header is set to `Content-Type: text/plain;charset=UTF-8`.
     return xhrRequest(__assign({ url: url, method: 'POST', body: body, onLoad: onLoad }, xhrRequestOptions));
 }
 /**
- * XMLHttpRequestを使用し、POSTメソッドでJSON形式のデータを送信します。
- * リクエストヘッダーには `Content-Type: application/json` を設定します。
- * @template T - extends Record<string, unknown>
- * @param {string} url
- * @param {T} data
- * @param {function} onLoad
- * @param {XHRRequestOptions} xhrRequestOptions
- * @returns {XMLHttpRequest}
+ * Use XMLHttpRequest to send data in JSON format using the POST method.
+ * Set the request header to `Content-Type: application/json`.
+ * @param url
+ * @param data
+ * @param onLoad
+ * @param xhrRequestOptions
  * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function postDataAsJson(url, data, onLoad, xhrRequestOptions) {
@@ -105,14 +99,12 @@ export function postDataAsJson(url, data, onLoad, xhrRequestOptions) {
     return post(url, JSON.stringify(data), onLoad, __assign({ requestHeaders: __assign(__assign({}, xhrRequestOptions.requestHeaders), { 'Content-Type': 'application/json' }) }, xhrRequestOptions));
 }
 /**
- * XMLHttpRequestを使用し、POSTメソッドでapplication/x-www-form-urlencoded形式のデータを送信します。
- * リクエストヘッダーには `Content-Type: application/x-www-form-urlencoded;charset=UTF-8` が設定されます。
- * @template RequestBody - extends Record<string, unknown>
- * @param {string} url
- * @param {RequestBody} data
- * @param {function} onLoad
- * @param {XHRRequestOptions} xhrRequestOptions
- * @returns {XMLHttpRequest}
+ * Use XMLHttpRequest to send data in application/x-www-form-urlencoded format using the POST method.
+ * The request header is set to `Content-Type: application/x-www-form-urlencoded;charset=UTF-8`.
+ * @param url
+ * @param data
+ * @param onLoad
+ * @param xhrRequestOptions
  * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function postDataAsXWwwFormUrlEncoded(url, data, onLoad, xhrRequestOptions) {
@@ -121,18 +113,17 @@ export function postDataAsXWwwFormUrlEncoded(url, data, onLoad, xhrRequestOption
     for (var name_2 in data) {
         urlSearchParams.append(name_2, String(data[name_2]));
     }
-    // bodyにURLSearchParams型が設定された場合、リクエストヘッダーに `Content-Type: application/x-www-form-urlencoded;charset=UTF-8` が設定される。
+    // If the URLSearchParams type is set in body, the request header is set to `Content-Type: application/x-www-form-urlencoded;charset=UTF-8`.
     return post(url, urlSearchParams, onLoad, xhrRequestOptions);
 }
 /**
- * XMLHttpRequestを使用し、POSTメソッドでmultipart/form-data形式のデータを送信します。
- * リクエストヘッダーには `Content-Type: multipart/form-data; boundary=...` が設定されます。
+ * Use XMLHttpRequest to send data in multipart/form-data format using the POST method.
+ * The request header is set to `Content-Type: multipart/form-data; boundary=... ` is set in the request header.
  * @template RequestBody - extends Record<string, string | Blob>
- * @param {string} url
- * @param {RequestBody} data
- * @param {function} onLoad
- * @param {XHRRequestOptions} xhrRequestOptions
- * @returns {XMLHttpRequest}
+ * @param url
+ * @param data
+ * @param onLoad
+ * @param xhrRequestOptions
  * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function postDataAsMultipartFormData(url, data, onLoad, xhrRequestOptions) {
@@ -141,7 +132,7 @@ export function postDataAsMultipartFormData(url, data, onLoad, xhrRequestOptions
     for (var name_3 in data) {
         formData.append(name_3, data[name_3]);
     }
-    // bodyにFormData型が設定された場合、リクエストヘッダーに `Content-Type: multipart/form-data; boundary=...` が設定される。
+    // If the body is set to the FormData type, the request header is set to `Content-Type: multipart/form-data; boundary=... ` is set in the request header.
     return post(url, formData, onLoad, xhrRequestOptions);
 }
 //# sourceMappingURL=XHR.js.map
