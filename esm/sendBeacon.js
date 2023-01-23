@@ -1,9 +1,8 @@
 import { post } from './XHR';
 /**
- * navigator.sendBeaconを糖衣する関数で、sendBeaconが使用できない場合XHRにフォールバックします。
- * @param {string} url
- * @param {(Blob | string | FormData | URLSearchParams)} body 型によってContent-Typeとペイロードが変化します。Blob型はそのtypeに応じ、stirngはtext/plain、FormDataはmultipart/form-data、URLSearchParamsはapplication/x-www-form-urlencodedとして送信されます。
- * @returns {boolean}
+ * Call navigator.sendBeacon, fallback to XHR for legacy browsers.
+ * @param url
+ * @param body Blob types are sent as text/plain for stirng, multipart/form-data for FormData, and application/x-www-form-urlencoded for URLSearchParams, depending on their type.
  */
 export function sendBeacon(url, body) {
     if (navigator.sendBeacon) {
@@ -20,11 +19,9 @@ export function sendBeacon(url, body) {
     }
 }
 /**
- * データをURLSearchParamsに変換し、sendBeacon関数を実行、application/x-www-form-urlencodedとしてデータを送信します。
- * @template T - extends Record<string, unknown>
- * @param {string} url
- * @param {T} data
- * @returns {boolean}
+ * Convert data to URLSearchParams, execute sendBeacon function, and send data as application/x-www-form-urlencoded.
+ * @param url
+ * @param data
  */
 export function sendBeaconAsXWwwUrlEncoded(url, data) {
     var urlSearchParams = new URLSearchParams();
@@ -34,11 +31,9 @@ export function sendBeaconAsXWwwUrlEncoded(url, data) {
     return sendBeacon(url, urlSearchParams);
 }
 /**
- * データをFormDataに変換し、sendBeacon関数を実行、multipart/form-dataとしてデータを送信します。
- * @template T - extends Record<string, unknown>
- * @param {string} url
- * @param {T} data
- * @returns {boolean}
+ * Convert data to FormData, execute sendBeacon function, and send data as multipart/form-data.
+ * @param url
+ * @param data
  */
 export function sendBeaconAsMultipartFormData(url, data) {
     var formData = new FormData();
@@ -48,11 +43,9 @@ export function sendBeaconAsMultipartFormData(url, data) {
     return sendBeacon(url, formData);
 }
 /**
- * データをJSON.stringifyしたBlobに変換し、sendBeacon関数を実行、application/jsonとしてデータを送信します。
- * @template T - extends Record<string, unknown>
- * @param {string} url
- * @param {T} data
- * @returns {boolean}
+ * Convert the data to JSON.stringify and Blob, execute the sendBeacon function, and send the data as application/json.
+ * @param url
+ * @param data
  */
 export function sendBeaconAsJson(url, data) {
     var blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
