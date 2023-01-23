@@ -3,10 +3,9 @@ import {post} from './XHR';
 type Body = Blob | string | FormData | URLSearchParams;
 
 /**
- * navigator.sendBeaconを糖衣する関数で、sendBeaconが使用できない場合XHRにフォールバックします。
- * @param {string} url
- * @param {(Blob | string | FormData | URLSearchParams)} body 型によってContent-Typeとペイロードが変化します。Blob型はそのtypeに応じ、stirngはtext/plain、FormDataはmultipart/form-data、URLSearchParamsはapplication/x-www-form-urlencodedとして送信されます。
- * @returns {boolean}
+ * Call navigator.sendBeacon, fallback to XHR for legacy browsers.
+ * @param url
+ * @param body Blob types are sent as text/plain for stirng, multipart/form-data for FormData, and application/x-www-form-urlencoded for URLSearchParams, depending on their type.
  */
 export function sendBeacon(url: string, body?: Body): boolean {
   if (navigator.sendBeacon) {
@@ -24,11 +23,9 @@ export function sendBeacon(url: string, body?: Body): boolean {
 type AnyObjects = Record<string, unknown>; // ≒ {}
 
 /**
- * データをURLSearchParamsに変換し、sendBeacon関数を実行、application/x-www-form-urlencodedとしてデータを送信します。
- * @template T - extends Record<string, unknown>
- * @param {string} url
- * @param {T} data
- * @returns {boolean}
+ * Convert data to URLSearchParams, execute sendBeacon function, and send data as application/x-www-form-urlencoded.
+ * @param url
+ * @param data
  */
 export function sendBeaconAsXWwwUrlEncoded<T extends AnyObjects>(
   url: string,
@@ -43,11 +40,9 @@ export function sendBeaconAsXWwwUrlEncoded<T extends AnyObjects>(
 }
 
 /**
- * データをFormDataに変換し、sendBeacon関数を実行、multipart/form-dataとしてデータを送信します。
- * @template T - extends Record<string, unknown>
- * @param {string} url
- * @param {T} data
- * @returns {boolean}
+ * Convert data to FormData, execute sendBeacon function, and send data as multipart/form-data.
+ * @param url
+ * @param data
  */
 export function sendBeaconAsMultipartFormData<T extends AnyObjects>(
   url: string,
@@ -62,11 +57,9 @@ export function sendBeaconAsMultipartFormData<T extends AnyObjects>(
 }
 
 /**
- * データをJSON.stringifyしたBlobに変換し、sendBeacon関数を実行、application/jsonとしてデータを送信します。
- * @template T - extends Record<string, unknown>
- * @param {string} url
- * @param {T} data
- * @returns {boolean}
+ * Convert the data to JSON.stringify and Blob, execute the sendBeacon function, and send the data as application/json.
+ * @param url
+ * @param data
  */
 export function sendBeaconAsJson<T extends AnyObjects>(url: string, data: T) {
   const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
