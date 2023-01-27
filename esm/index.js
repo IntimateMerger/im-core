@@ -6,4 +6,6 @@ import * as SessionStorage_1 from './SessionStorage';
 export { SessionStorage_1 as SessionStorage };
 import * as XHR_1 from './XHR';
 export { XHR_1 as XHR };
+import * as sendBeacon_1 from './sendBeacon';
+export { sendBeacon_1 as sendBeacon };
 //# sourceMappingURL=index.js.map
