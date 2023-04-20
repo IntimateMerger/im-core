@@ -12,7 +12,7 @@ export function sendBeacon(url: string, body?: Body): boolean {
     return navigator.sendBeacon(url, body);
   } else {
     try {
-      post(url, body, void 0, {asynchronous: false});
+      post(url, body, void 0, {asynchronous: false, withCredentials: true});
       return true;
     } catch {
       return false;
