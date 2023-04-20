@@ -13,7 +13,7 @@ function sendBeacon(url, body) {
     }
     else {
         try {
-            (0, XHR_1.post)(url, body, void 0, { asynchronous: false });
+            (0, XHR_1.post)(url, body, void 0, { asynchronous: false, withCredentials: true });
             return true;
         }
         catch (_a) {

@@ -10,7 +10,7 @@ export function sendBeacon(url, body) {
     }
     else {
         try {
-            post(url, body, void 0, { asynchronous: false });
+            post(url, body, void 0, { asynchronous: false, withCredentials: true });
             return true;
         }
         catch (_a) {
