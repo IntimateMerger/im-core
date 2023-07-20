@@ -1,0 +1,57 @@
+<!doctype html>
+<h1>XHR</h1>
+<script type="module">
+  import * as XHR from './esm/XHR.js';
+
+  const expectResponse = {ok: true};
+  const samplePayload = {foobar: 'buzz'};
+
+  XHR.getData('/api/endpoint', response => {
+    console.assert(JSON.stringify(response) === JSON.stringify(expectResponse));
+  }, {
+    onFailure: () => {
+      console.assert(false);
+    },
+  });
+
+  XHR.postDataAsJson('/api/endpoint', samplePayload, ({response}) => {
+    console.assert(response === JSON.stringify(expectResponse));
+  }, {
+    onFailure: () => {
+      console.assert(false);
+    },
+  });
+
+  XHR.postDataAsXWwwFormUrlEncoded('/api/endpoint', samplePayload, ({response}) => {
+    console.assert(response === JSON.stringify(expectResponse));
+  }, {
+    onFailure: () => {
+      console.assert(false);
+    },
+  });
+
+  XHR.postDataAsMultipartFormData('/api/endpoint', samplePayload, ({response}) => {
+    console.assert(response === JSON.stringify(expectResponse));
+  }, {
+    onFailure: () => {
+      console.assert(false);
+    },
+  });
+
+  XHR.getData('/api/the-not-found', response => {
+    console.assert(false);
+  }, {
+    onFailure: () => {
+      console.assert(true);
+    },
+  });
+
+  XHR.postDataAsJson('/api/the-forbidden', samplePayload, () => {
+    console.assert(false);
+  }, {
+    onFailure: () => {
+      console.assert(true);
+    },
+  })
+
+</script>
