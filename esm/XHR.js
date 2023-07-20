@@ -36,13 +36,12 @@ export function xhrRequest(params) {
         _loop_1(name_1);
     }
     xhr.onload = function () {
-        var status = xhr.status, statusText = xhr.statusText, readyState = xhr.readyState, response = xhr.response, responseText = xhr.responseText;
+        var status = xhr.status, statusText = xhr.statusText, readyState = xhr.readyState, response = xhr.response;
         var loadCallbackPayload = {
             status: status,
             statusText: statusText,
             readyState: readyState,
             response: response,
-            responseText: responseText,
         };
         if (status >= 200 && status < 300 && readyState === 4) {
             if (onLoadSuccess)

@@ -4,7 +4,6 @@ type LoadCallbackPayload<Response> = {
     statusText: string;
     readyState: number;
     response: Response;
-    responseText: string;
 };
 type LoadCallback<T> = (payload: LoadCallbackPayload<T>) => unknown;
 type XHRRequestOptions = {
