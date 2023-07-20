@@ -1,6 +1,7 @@
 {
   "name": "@intimatemerger/im-core",
-  "version": "0.1.4",
+  "version": "0.2.0",
+  "license": "MIT",
   "main": "./cjs/index.js",
   "types": "./cjs/index.d.js",
   "files": [
@@ -8,12 +9,6 @@
     "esm"
   ],
   "repository": "git@github.com:IntimateMerger/im-core.git",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^18.11.18",
-    "gts": "^3.1.1",
-    "typescript": "^5.0.4"
-  },
   "scripts": {
     "lint": "gts lint",
     "clean": "gts clean",
@@ -23,10 +18,20 @@
     "build:esm": "tsc --module ES6 --outDir esm",
     "fix": "gts fix",
     "prepare": "npm run build",
-    "pretest": "npm run build",
-    "posttest": "npm run lint"
+    "test-server": "node ./test-server/start.js"
   },
   "engines": {
     "node": ">=16"
+  },
+  "devDependencies": {
+    "@koa/multer": "^3.0.2",
+    "@koa/router": "^12.0.0",
+    "@types/node": "^18.11.18",
+    "express": "^4.18.2",
+    "gts": "^3.1.1",
+    "http-server": "^14.1.1",
+    "koa": "^2.14.2",
+    "koa-static": "^5.0.0",
+    "typescript": "^5.0.4"
   }
 }

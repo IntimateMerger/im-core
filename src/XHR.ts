@@ -9,14 +9,14 @@ type HTTPMethod =
   | 'TRACE'
   | 'PATCH';
 
-type XHRParams = {
-  url: string;
-  method: HTTPMethod;
-  body?: Document | XMLHttpRequestBodyInit | null;
-  onLoad?: (responseText: string) => unknown;
-  onError?: () => unknown;
-  onTimeout?: () => unknown;
-} & XHRRequestOptions;
+type LoadCallbackPayload<Response> = {
+  status: number;
+  statusText: string;
+  readyState: number;
+  response: Response;
+};
+
+type LoadCallback<T> = (payload: LoadCallbackPayload<T>) => unknown;
 
 type XHRRequestOptions = {
   timeout?: number;
@@ -25,19 +25,30 @@ type XHRRequestOptions = {
   asynchronous?: boolean;
 };
 
+type XHRParams<Response> = {
+  url: string;
+  method: HTTPMethod;
+  responseType?: XMLHttpRequestResponseType;
+  body?: Document | XMLHttpRequestBodyInit | null;
+  onLoadSuccess?: LoadCallback<Response>;
+  onFailure?: () => unknown;
+} & XHRRequestOptions;
+
 /**
  * Sends a request using XMLHttpRequest
  * @param params - withCredentials and asynchronous are true if not set.
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
+ * @throws Network errors may occur during the execution of the XMLHttpRequest.
+ * These errors do not result in the throwing of exceptions but can be
+ * handled with the `onFailure` callback parameter.
  */
-export function xhrRequest(params: XHRParams) {
+export function xhrRequest<Response>(params: XHRParams<Response>) {
   const {
     url,
     method,
+    responseType,
     body = null,
-    onLoad,
-    onError,
-    onTimeout,
+    onLoadSuccess,
+    onFailure,
     timeout,
     requestHeaders,
     withCredentials = true,
@@ -46,6 +57,8 @@ export function xhrRequest(params: XHRParams) {
 
   const xhr = new XMLHttpRequest();
   xhr.open(method, url, asynchronous);
+
+  if (typeof responseType === 'string') xhr.responseType = responseType;
 
   xhr.withCredentials = withCredentials;
   if (typeof timeout === 'number') xhr.timeout = timeout;
@@ -58,12 +71,24 @@ export function xhrRequest(params: XHRParams) {
     });
   }
 
-  if (onLoad)
-    xhr.onload = () => {
-      onLoad(xhr.responseText);
+  xhr.onload = () => {
+    const {status, statusText, readyState, response} = xhr;
+
+    const loadCallbackPayload: LoadCallbackPayload<Response> = {
+      status,
+      statusText,
+      readyState,
+      response,
     };
-  if (onError) xhr.onerror = onError;
-  if (onTimeout) xhr.ontimeout = onTimeout;
+
+    if (status >= 200 && status < 300 && readyState === 4) {
+      if (onLoadSuccess) onLoadSuccess(loadCallbackPayload);
+    } else {
+      if (onFailure) onFailure();
+    }
+  };
+  if (onFailure) xhr.onerror = onFailure;
+  if (onFailure) xhr.ontimeout = onFailure;
 
   xhr.send(body);
   return xhr;
@@ -74,19 +99,16 @@ export function xhrRequest(params: XHRParams) {
  * @param url
  * @param onLoad
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
-export function get(
+export function get<Response>(
   url: string,
-  onLoad: (responseText: string) => unknown,
+  onLoadSuccess: (payload: LoadCallbackPayload<Response>) => unknown,
   xhrRequestOptions: XHRRequestOptions = {}
 ) {
   return xhrRequest({
     url,
     method: 'GET',
-    onLoad: (responseText: string) => {
-      onLoad(responseText);
-    },
+    onLoadSuccess,
     ...xhrRequestOptions,
   });
 }
@@ -94,24 +116,23 @@ export function get(
 /**
  * Use XMLHttpRequest and send the request with the GET method.
  * Set the request header to `Accept: application/json`.
- * The received response is processed as JSON.parse and called back in the onLoad argument.
  * The expected data type can be specified by generics.
  * @param url
- * @param onLoad
+ * @param onLoadSuccess
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function getData<Response>(
   url: string,
-  onLoad: (data: Response) => unknown,
+  onLoadSuccess: (data: Response) => unknown,
   xhrRequestOptions: XHRRequestOptions = {}
 ) {
-  return xhrRequest({
+  return xhrRequest<Response>({
     url,
     method: 'GET',
-    onLoad: responseText => {
-      const data = JSON.parse(responseText) as Response;
-      onLoad(data);
+    responseType: 'json',
+    onLoadSuccess: callbackPayload => {
+      const data = callbackPayload.response as Response;
+      onLoadSuccess(data);
     },
     ...xhrRequestOptions,
     requestHeaders: {
@@ -125,22 +146,21 @@ export function getData<Response>(
  * Use XMLHttpRequest and send data with the POST method.
  * @param url
  * @param body
- * @param onLoad
+ * @param onLoadSuccess
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
-export function post(
+export function post<Response>(
   url: string,
   body?: XMLHttpRequestBodyInit | null,
-  onLoad?: (responseText: string) => unknown,
+  onLoadSuccess?: LoadCallback<Response>,
   xhrRequestOptions: XHRRequestOptions = {}
 ) {
   // If body is a string type, the request header is set to `Content-Type: text/plain;charset=UTF-8`.
-  return xhrRequest({
+  return xhrRequest<Response>({
     url,
     method: 'POST',
     body,
-    onLoad,
+    onLoadSuccess,
     ...xhrRequestOptions,
   });
 }
@@ -150,17 +170,20 @@ export function post(
  * Set the request header to `Content-Type: application/json`.
  * @param url
  * @param data
- * @param onLoad
+ * @param onLoadSuccess
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
+ * @throws {TypeError}
  */
-export function postDataAsJson<T extends Record<string, unknown>>(
+export function postDataAsJson<
+  Request extends Record<string, unknown>,
+  Response
+>(
   url: string,
-  data: T,
-  onLoad?: (responseText: string) => unknown,
+  data: Request,
+  onLoadSuccess?: LoadCallback<Response>,
   xhrRequestOptions: XHRRequestOptions = {}
 ) {
-  return post(url, JSON.stringify(data), onLoad, {
+  return post<Response>(url, JSON.stringify(data), onLoadSuccess, {
     requestHeaders: {
       ...xhrRequestOptions.requestHeaders,
       'Content-Type': 'application/json',
@@ -176,14 +199,14 @@ export function postDataAsJson<T extends Record<string, unknown>>(
  * @param data
  * @param onLoad
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function postDataAsXWwwFormUrlEncoded<
-  RequestBody extends Record<string, unknown>
+  RequestBody extends Record<string, unknown>,
+  Response
 >(
   url: string,
   data: RequestBody,
-  onLoad?: (responseText: string) => unknown,
+  onLoadSuccess?: LoadCallback<Response>,
   xhrRequestOptions: XHRRequestOptions = {}
 ) {
   const urlSearchParams = new URLSearchParams();
@@ -192,7 +215,7 @@ export function postDataAsXWwwFormUrlEncoded<
   }
 
   // If the URLSearchParams type is set in body, the request header is set to `Content-Type: application/x-www-form-urlencoded;charset=UTF-8`.
-  return post(url, urlSearchParams, onLoad, xhrRequestOptions);
+  return post(url, urlSearchParams, onLoadSuccess, xhrRequestOptions);
 }
 
 /**
@@ -201,16 +224,16 @@ export function postDataAsXWwwFormUrlEncoded<
  * @template RequestBody - extends Record<string, string | Blob>
  * @param url
  * @param data
- * @param onLoad
+ * @param onLoadSuccess
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function postDataAsMultipartFormData<
-  RequestBody extends Record<string, string | Blob>
+  RequestBody extends Record<string, string | Blob>,
+  Response
 >(
   url: string,
   data: RequestBody,
-  onLoad?: (responseText: string) => unknown,
+  onLoadSuccess?: LoadCallback<Response>,
   xhrRequestOptions: XHRRequestOptions = {}
 ) {
   const formData = new FormData();
@@ -219,5 +242,5 @@ export function postDataAsMultipartFormData<
   }
 
   // If the body is set to the FormData type, the request header is set to `Content-Type: multipart/form-data; boundary=... ` is set in the request header.
-  return post(url, formData, onLoad, xhrRequestOptions);
+  return post(url, formData, onLoadSuccess, xhrRequestOptions);
 }
