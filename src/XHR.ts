@@ -96,7 +96,7 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
       responseText,
     };
 
-    if (status === 200 && readyState === 4) {
+    if (status >= 200 && status < 300 && readyState === 4) {
       if (onLoadSuccess) onLoadSuccess(loadCallbackPayload);
     } else {
       if (onLoadFailure) onLoadFailure(loadCallbackPayload);
