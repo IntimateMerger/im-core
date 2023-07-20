@@ -9,13 +9,11 @@ type HTTPMethod =
   | 'TRACE'
   | 'PATCH';
 
-type XHRResponse<T extends {} | any> = string | ArrayBuffer | Blob | Document | T | null;
-
-type LoadCallbackPayload<T> = {
+type LoadCallbackPayload<Response> = {
   status: number;
   statusText: string;
   readyState: number;
-  response: XHRResponse<T>;
+  response: Response;
   responseText: string;
 };
 
@@ -28,13 +26,13 @@ type XHRRequestOptions = {
   asynchronous?: boolean;
 };
 
-type XHRParams<T> = {
+type XHRParams<Response> = {
   url: string;
   method: HTTPMethod;
   responseType?: XMLHttpRequestResponseType;
   body?: Document | XMLHttpRequestBodyInit | null;
-  onLoadSuccess?: LoadCallback<T>;
-  onLoadFailure?: LoadCallback<T>;
+  onLoadSuccess?: LoadCallback<Response>;
+  onLoadFailure?: LoadCallback<Response>;
   onLoad?: () => unknown;
   onError?: () => unknown;
   onTimeout?: () => unknown;
@@ -45,7 +43,7 @@ type XHRParams<T> = {
  * @param params - withCredentials and asynchronous are true if not set.
  * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
-export function xhrRequest<T = any>(params: XHRParams<T>) {
+export function xhrRequest<Response>(params: XHRParams<Response>) {
   const {
     url,
     method,
@@ -90,7 +88,7 @@ export function xhrRequest<T = any>(params: XHRParams<T>) {
       responseText,
     } = xhr;
 
-    const loadCallbackPayload: LoadCallbackPayload<T> = {
+    const loadCallbackPayload: LoadCallbackPayload<Response> = {
       status,
       statusText,
       readyState,
@@ -118,9 +116,9 @@ export function xhrRequest<T = any>(params: XHRParams<T>) {
  * @param xhrRequestOptions
  * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
-export function get<T = any>(
+export function get<Response>(
   url: string,
-  onLoadSuccess: (payload: LoadCallbackPayload<T>) => unknown,
+  onLoadSuccess: (payload: LoadCallbackPayload<Response>) => unknown,
   xhrRequestOptions: XHRRequestOptions = {}
 ) {
   return xhrRequest({
