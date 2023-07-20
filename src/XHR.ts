@@ -72,15 +72,8 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
     });
   }
 
-
   xhr.onload = () => {
-    const {
-      status,
-      statusText,
-      readyState,
-      response,
-      responseText,
-    } = xhr;
+    const {status, statusText, readyState, response, responseText} = xhr;
 
     const loadCallbackPayload: LoadCallbackPayload<Response> = {
       status,
@@ -139,7 +132,7 @@ export function getData<Response>(
     url,
     method: 'GET',
     responseType: 'json',
-    onLoadSuccess: (callbackPayload) => {
+    onLoadSuccess: callbackPayload => {
       const data = callbackPayload.response as Response;
       onLoadSuccess(data);
     },
@@ -183,7 +176,10 @@ export function post<Response>(
  * @param xhrRequestOptions
  * @throws {TypeError}
  */
-export function postDataAsJson<Request extends Record<string, unknown>, Response>(
+export function postDataAsJson<
+  Request extends Record<string, unknown>,
+  Response
+>(
   url: string,
   data: Request,
   onLoadSuccess?: LoadCallback<Response>,
