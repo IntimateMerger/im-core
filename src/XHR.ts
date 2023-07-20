@@ -94,12 +94,12 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
       if (onFailure) onFailure(loadCallbackPayload);
     }
   });
-  xhr.addEventListener('error', (event) => {
+  xhr.addEventListener('error', event => {
     if (onFailure) onFailure(event);
     if (onError) onError(event);
   });
 
-  xhr.addEventListener('timeout', (event) => {
+  xhr.addEventListener('timeout', event => {
     if (onFailure) onFailure(event);
     if (onTimeout) onTimeout(event);
   });
