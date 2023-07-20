@@ -17,7 +17,7 @@ var __assign = (this && this.__assign) || function () {
  * handled with the `onFailure` callback parameter.
  */
 export function xhrRequest(params) {
-    var url = params.url, method = params.method, responseType = params.responseType, _a = params.body, body = _a === void 0 ? null : _a, onLoadSuccess = params.onLoadSuccess, onFailure = params.onFailure, timeout = params.timeout, requestHeaders = params.requestHeaders, _b = params.withCredentials, withCredentials = _b === void 0 ? true : _b, _c = params.asynchronous, asynchronous = _c === void 0 ? true : _c;
+    var url = params.url, method = params.method, responseType = params.responseType, _a = params.body, body = _a === void 0 ? null : _a, onLoadSuccess = params.onLoadSuccess, onLoadFailure = params.onLoadFailure, onFailure = params.onFailure, onError = params.onError, onTimeout = params.onTimeout, timeout = params.timeout, requestHeaders = params.requestHeaders, _b = params.withCredentials, withCredentials = _b === void 0 ? true : _b, _c = params.asynchronous, asynchronous = _c === void 0 ? true : _c;
     var xhr = new XMLHttpRequest();
     xhr.open(method, url, asynchronous);
     if (typeof responseType === 'string')
@@ -35,7 +35,7 @@ export function xhrRequest(params) {
     for (var name_1 in requestHeaders) {
         _loop_1(name_1);
     }
-    xhr.onload = function () {
+    xhr.addEventListener('load', function () {
         var status = xhr.status, statusText = xhr.statusText, readyState = xhr.readyState, response = xhr.response;
         var loadCallbackPayload = {
             status: status,
@@ -48,14 +48,24 @@ export function xhrRequest(params) {
                 onLoadSuccess(loadCallbackPayload);
         }
         else {
+            if (onLoadFailure)
+                onLoadFailure(loadCallbackPayload);
             if (onFailure)
-                onFailure();
+                onFailure(loadCallbackPayload);
         }
-    };
-    if (onFailure)
-        xhr.onerror = onFailure;
-    if (onFailure)
-        xhr.ontimeout = onFailure;
+    });
+    xhr.addEventListener('error', function (event) {
+        if (onFailure)
+            onFailure(event);
+        if (onError)
+            onError(event);
+    });
+    xhr.addEventListener('timeout', function (event) {
+        if (onFailure)
+            onFailure(event);
+        if (onTimeout)
+            onTimeout(event);
+    });
     xhr.send(body);
     return xhr;
 }
