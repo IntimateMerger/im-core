@@ -15,12 +15,16 @@ exports.postDataAsMultipartFormData = exports.postDataAsXWwwFormUrlEncoded = exp
 /**
  * Sends a request using XMLHttpRequest
  * @param params - withCredentials and asynchronous are true if not set.
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
+ * @throws Network errors may occur during the execution of the XMLHttpRequest.
+ * These errors do not result in the throwing of exceptions but can be
+ * handled with the `onFailure` callback parameter.
  */
 function xhrRequest(params) {
-    var url = params.url, method = params.method, _a = params.body, body = _a === void 0 ? null : _a, onLoad = params.onLoad, onError = params.onError, onTimeout = params.onTimeout, timeout = params.timeout, requestHeaders = params.requestHeaders, _b = params.withCredentials, withCredentials = _b === void 0 ? true : _b, _c = params.asynchronous, asynchronous = _c === void 0 ? true : _c;
+    var url = params.url, method = params.method, responseType = params.responseType, _a = params.body, body = _a === void 0 ? null : _a, onLoadSuccess = params.onLoadSuccess, onFailure = params.onFailure, timeout = params.timeout, requestHeaders = params.requestHeaders, _b = params.withCredentials, withCredentials = _b === void 0 ? true : _b, _c = params.asynchronous, asynchronous = _c === void 0 ? true : _c;
     var xhr = new XMLHttpRequest();
     xhr.open(method, url, asynchronous);
+    if (typeof responseType === 'string')
+        xhr.responseType = responseType;
     xhr.withCredentials = withCredentials;
     if (typeof timeout === 'number')
         xhr.timeout = timeout;
@@ -34,14 +38,28 @@ function xhrRequest(params) {
     for (var name_1 in requestHeaders) {
         _loop_1(name_1);
     }
-    if (onLoad)
-        xhr.onload = function () {
-            onLoad(xhr.responseText);
+    xhr.onload = function () {
+        var status = xhr.status, statusText = xhr.statusText, readyState = xhr.readyState, response = xhr.response, responseText = xhr.responseText;
+        var loadCallbackPayload = {
+            status: status,
+            statusText: statusText,
+            readyState: readyState,
+            response: response,
+            responseText: responseText,
         };
-    if (onError)
-        xhr.onerror = onError;
-    if (onTimeout)
-        xhr.ontimeout = onTimeout;
+        if (status >= 200 && status < 300 && readyState === 4) {
+            if (onLoadSuccess)
+                onLoadSuccess(loadCallbackPayload);
+        }
+        else {
+            if (onFailure)
+                onFailure();
+        }
+    };
+    if (onFailure)
+        xhr.onerror = onFailure;
+    if (onFailure)
+        xhr.ontimeout = onFailure;
     xhr.send(body);
     return xhr;
 }
@@ -51,30 +69,25 @@ exports.xhrRequest = xhrRequest;
  * @param url
  * @param onLoad
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
-function get(url, onLoad, xhrRequestOptions) {
+function get(url, onLoadSuccess, xhrRequestOptions) {
     if (xhrRequestOptions === void 0) { xhrRequestOptions = {}; }
-    return xhrRequest(__assign({ url: url, method: 'GET', onLoad: function (responseText) {
-            onLoad(responseText);
-        } }, xhrRequestOptions));
+    return xhrRequest(__assign({ url: url, method: 'GET', onLoadSuccess: onLoadSuccess }, xhrRequestOptions));
 }
 exports.get = get;
 /**
  * Use XMLHttpRequest and send the request with the GET method.
  * Set the request header to `Accept: application/json`.
- * The received response is processed as JSON.parse and called back in the onLoad argument.
  * The expected data type can be specified by generics.
  * @param url
- * @param onLoad
+ * @param onLoadSuccess
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
-function getData(url, onLoad, xhrRequestOptions) {
+function getData(url, onLoadSuccess, xhrRequestOptions) {
     if (xhrRequestOptions === void 0) { xhrRequestOptions = {}; }
-    return xhrRequest(__assign(__assign({ url: url, method: 'GET', onLoad: function (responseText) {
-            var data = JSON.parse(responseText);
-            onLoad(data);
+    return xhrRequest(__assign(__assign({ url: url, method: 'GET', responseType: 'json', onLoadSuccess: function (callbackPayload) {
+            var data = callbackPayload.response;
+            onLoadSuccess(data);
         } }, xhrRequestOptions), { requestHeaders: __assign(__assign({}, xhrRequestOptions.requestHeaders), { Accept: 'application/json' }) }));
 }
 exports.getData = getData;
@@ -82,14 +95,13 @@ exports.getData = getData;
  * Use XMLHttpRequest and send data with the POST method.
  * @param url
  * @param body
- * @param onLoad
+ * @param onLoadSuccess
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
-function post(url, body, onLoad, xhrRequestOptions) {
+function post(url, body, onLoadSuccess, xhrRequestOptions) {
     if (xhrRequestOptions === void 0) { xhrRequestOptions = {}; }
     // If body is a string type, the request header is set to `Content-Type: text/plain;charset=UTF-8`.
-    return xhrRequest(__assign({ url: url, method: 'POST', body: body, onLoad: onLoad }, xhrRequestOptions));
+    return xhrRequest(__assign({ url: url, method: 'POST', body: body, onLoadSuccess: onLoadSuccess }, xhrRequestOptions));
 }
 exports.post = post;
 /**
@@ -97,13 +109,13 @@ exports.post = post;
  * Set the request header to `Content-Type: application/json`.
  * @param url
  * @param data
- * @param onLoad
+ * @param onLoadSuccess
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
+ * @throws {TypeError}
  */
-function postDataAsJson(url, data, onLoad, xhrRequestOptions) {
+function postDataAsJson(url, data, onLoadSuccess, xhrRequestOptions) {
     if (xhrRequestOptions === void 0) { xhrRequestOptions = {}; }
-    return post(url, JSON.stringify(data), onLoad, __assign({ requestHeaders: __assign(__assign({}, xhrRequestOptions.requestHeaders), { 'Content-Type': 'application/json' }) }, xhrRequestOptions));
+    return post(url, JSON.stringify(data), onLoadSuccess, __assign({ requestHeaders: __assign(__assign({}, xhrRequestOptions.requestHeaders), { 'Content-Type': 'application/json' }) }, xhrRequestOptions));
 }
 exports.postDataAsJson = postDataAsJson;
 /**
@@ -113,16 +125,15 @@ exports.postDataAsJson = postDataAsJson;
  * @param data
  * @param onLoad
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
-function postDataAsXWwwFormUrlEncoded(url, data, onLoad, xhrRequestOptions) {
+function postDataAsXWwwFormUrlEncoded(url, data, onLoadSuccess, xhrRequestOptions) {
     if (xhrRequestOptions === void 0) { xhrRequestOptions = {}; }
     var urlSearchParams = new URLSearchParams();
     for (var name_2 in data) {
         urlSearchParams.append(name_2, String(data[name_2]));
     }
     // If the URLSearchParams type is set in body, the request header is set to `Content-Type: application/x-www-form-urlencoded;charset=UTF-8`.
-    return post(url, urlSearchParams, onLoad, xhrRequestOptions);
+    return post(url, urlSearchParams, onLoadSuccess, xhrRequestOptions);
 }
 exports.postDataAsXWwwFormUrlEncoded = postDataAsXWwwFormUrlEncoded;
 /**
@@ -131,18 +142,17 @@ exports.postDataAsXWwwFormUrlEncoded = postDataAsXWwwFormUrlEncoded;
  * @template RequestBody - extends Record<string, string | Blob>
  * @param url
  * @param data
- * @param onLoad
+ * @param onLoadSuccess
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
-function postDataAsMultipartFormData(url, data, onLoad, xhrRequestOptions) {
+function postDataAsMultipartFormData(url, data, onLoadSuccess, xhrRequestOptions) {
     if (xhrRequestOptions === void 0) { xhrRequestOptions = {}; }
     var formData = new FormData();
     for (var name_3 in data) {
         formData.append(name_3, data[name_3]);
     }
     // If the body is set to the FormData type, the request header is set to `Content-Type: multipart/form-data; boundary=... ` is set in the request header.
-    return post(url, formData, onLoad, xhrRequestOptions);
+    return post(url, formData, onLoadSuccess, xhrRequestOptions);
 }
 exports.postDataAsMultipartFormData = postDataAsMultipartFormData;
 //# sourceMappingURL=XHR.js.map
