@@ -132,7 +132,6 @@ export function get<Response>(
 /**
  * Use XMLHttpRequest and send the request with the GET method.
  * Set the request header to `Accept: application/json`.
- * The received response is processed as JSON.parse and called back in the onLoad argument.
  * The expected data type can be specified by generics.
  * @param url
  * @param onLoadSuccess
@@ -164,7 +163,7 @@ export function getData<Response>(
  * Use XMLHttpRequest and send data with the POST method.
  * @param url
  * @param body
- * @param onLoad
+ * @param onLoadSuccess
  * @param xhrRequestOptions
  * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
@@ -189,7 +188,7 @@ export function post<Response>(
  * Set the request header to `Content-Type: application/json`.
  * @param url
  * @param data
- * @param onLoad
+ * @param onLoadSuccess
  * @param xhrRequestOptions
  * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
@@ -241,7 +240,7 @@ export function postDataAsXWwwFormUrlEncoded<
  * @template RequestBody - extends Record<string, string | Blob>
  * @param url
  * @param data
- * @param onLoad
+ * @param onLoadSuccess
  * @param xhrRequestOptions
  * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
