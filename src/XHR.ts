@@ -14,7 +14,6 @@ type LoadCallbackPayload<Response> = {
   statusText: string;
   readyState: number;
   response: Response;
-  responseText: string;
 };
 
 type LoadCallback<T> = (payload: LoadCallbackPayload<T>) => unknown;
@@ -73,14 +72,13 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
   }
 
   xhr.onload = () => {
-    const {status, statusText, readyState, response, responseText} = xhr;
+    const {status, statusText, readyState, response} = xhr;
 
     const loadCallbackPayload: LoadCallbackPayload<Response> = {
       status,
       statusText,
       readyState,
       response,
-      responseText,
     };
 
     if (status >= 200 && status < 300 && readyState === 4) {
