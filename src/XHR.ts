@@ -32,16 +32,15 @@ type XHRParams<Response> = {
   responseType?: XMLHttpRequestResponseType;
   body?: Document | XMLHttpRequestBodyInit | null;
   onLoadSuccess?: LoadCallback<Response>;
-  onLoadFailure?: LoadCallback<Response>;
-  onLoad?: () => unknown;
-  onError?: () => unknown;
-  onTimeout?: () => unknown;
+  onFailure?: () => unknown;
 } & XHRRequestOptions;
 
 /**
  * Sends a request using XMLHttpRequest
  * @param params - withCredentials and asynchronous are true if not set.
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
+ * @throws Network errors may occur during the execution of the XMLHttpRequest.
+ * These errors do not result in the throwing of exceptions but can be
+ * handled with the `onFailure` callback parameter.
  */
 export function xhrRequest<Response>(params: XHRParams<Response>) {
   const {
@@ -50,10 +49,7 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
     responseType,
     body = null,
     onLoadSuccess,
-    onLoadFailure,
-    onLoad,
-    onError,
-    onTimeout,
+    onFailure,
     timeout,
     requestHeaders,
     withCredentials = true,
@@ -78,8 +74,6 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
 
 
   xhr.onload = () => {
-    if (onLoad) onLoad();
-
     const {
       status,
       statusText,
@@ -99,11 +93,11 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
     if (status >= 200 && status < 300 && readyState === 4) {
       if (onLoadSuccess) onLoadSuccess(loadCallbackPayload);
     } else {
-      if (onLoadFailure) onLoadFailure(loadCallbackPayload);
+      if (onFailure) onFailure();
     }
   };
-  if (onError) xhr.onerror = onError;
-  if (onTimeout) xhr.ontimeout = onTimeout;
+  if (onFailure) xhr.onerror = onFailure;
+  if (onFailure) xhr.ontimeout = onFailure;
 
   xhr.send(body);
   return xhr;
@@ -114,7 +108,6 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
  * @param url
  * @param onLoad
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function get<Response>(
   url: string,
@@ -136,7 +129,6 @@ export function get<Response>(
  * @param url
  * @param onLoadSuccess
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function getData<Response>(
   url: string,
@@ -165,7 +157,6 @@ export function getData<Response>(
  * @param body
  * @param onLoadSuccess
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function post<Response>(
   url: string,
@@ -190,7 +181,7 @@ export function post<Response>(
  * @param data
  * @param onLoadSuccess
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
+ * @throws {TypeError}
  */
 export function postDataAsJson<Request extends Record<string, unknown>, Response>(
   url: string,
@@ -214,7 +205,6 @@ export function postDataAsJson<Request extends Record<string, unknown>, Response
  * @param data
  * @param onLoad
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function postDataAsXWwwFormUrlEncoded<
   RequestBody extends Record<string, unknown>,
@@ -242,7 +232,6 @@ export function postDataAsXWwwFormUrlEncoded<
  * @param data
  * @param onLoadSuccess
  * @param xhrRequestOptions
- * @throws {(SyntaxError | SecurityError | InvalidAccessError | InvalidStateError)}
  */
 export function postDataAsMultipartFormData<
   RequestBody extends Record<string, string | Blob>,
