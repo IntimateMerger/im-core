@@ -20,7 +20,10 @@ type XHRParams<Response> = {
     responseType?: XMLHttpRequestResponseType;
     body?: Document | XMLHttpRequestBodyInit | null;
     onLoadSuccess?: LoadCallback<Response>;
-    onFailure?: () => unknown;
+    onLoadFailure?: LoadCallback<Response>;
+    onFailure?: (event: Event | LoadCallbackPayload<Response>) => unknown;
+    onError?: (event: Event) => unknown;
+    onTimeout?: (event: Event) => unknown;
 } & XHRRequestOptions;
 /**
  * Sends a request using XMLHttpRequest
