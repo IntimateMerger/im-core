@@ -31,7 +31,10 @@ type XHRParams<Response> = {
   responseType?: XMLHttpRequestResponseType;
   body?: Document | XMLHttpRequestBodyInit | null;
   onLoadSuccess?: LoadCallback<Response>;
-  onFailure?: () => unknown;
+  onLoadFailure?: LoadCallback<Response>;
+  onFailure?: (event: Event | LoadCallbackPayload<Response>) => unknown;
+  onError?: (event: Event) => unknown;
+  onTimeout?: (event: Event) => unknown;
 } & XHRRequestOptions;
 
 /**
@@ -48,7 +51,10 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
     responseType,
     body = null,
     onLoadSuccess,
+    onLoadFailure,
     onFailure,
+    onError,
+    onTimeout,
     timeout,
     requestHeaders,
     withCredentials = true,
@@ -71,7 +77,7 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
     });
   }
 
-  xhr.onload = () => {
+  xhr.addEventListener('load', () => {
     const {status, statusText, readyState, response} = xhr;
 
     const loadCallbackPayload: LoadCallbackPayload<Response> = {
@@ -84,11 +90,19 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
     if (status >= 200 && status < 300 && readyState === 4) {
       if (onLoadSuccess) onLoadSuccess(loadCallbackPayload);
     } else {
-      if (onFailure) onFailure();
+      if (onLoadFailure) onLoadFailure(loadCallbackPayload);
+      if (onFailure) onFailure(loadCallbackPayload);
     }
-  };
-  if (onFailure) xhr.onerror = onFailure;
-  if (onFailure) xhr.ontimeout = onFailure;
+  });
+  xhr.addEventListener('error', (event) => {
+    if (onFailure) onFailure(event);
+    if (onError) onError(event);
+  });
+
+  xhr.addEventListener('timeout', (event) => {
+    if (onFailure) onFailure(event);
+    if (onTimeout) onTimeout(event);
+  });
 
   xhr.send(body);
   return xhr;
