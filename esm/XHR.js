@@ -20,11 +20,11 @@ export function xhrRequest(params) {
     var url = params.url, method = params.method, responseType = params.responseType, _a = params.body, body = _a === void 0 ? null : _a, onLoadSuccess = params.onLoadSuccess, onLoadFailure = params.onLoadFailure, onFailure = params.onFailure, onError = params.onError, onTimeout = params.onTimeout, timeout = params.timeout, requestHeaders = params.requestHeaders, _b = params.withCredentials, withCredentials = _b === void 0 ? true : _b, _c = params.asynchronous, asynchronous = _c === void 0 ? true : _c;
     var xhr = new XMLHttpRequest();
     xhr.open(method, url, asynchronous);
-    if (typeof responseType === 'string')
-        xhr.responseType = responseType;
     xhr.withCredentials = withCredentials;
     if (typeof timeout === 'number')
         xhr.timeout = timeout;
+    if (typeof responseType === 'string')
+        xhr.responseType = responseType;
     var _loop_1 = function (name_1) {
         var content = requestHeaders[name_1];
         var list = typeof content === 'string' ? [content] : content;

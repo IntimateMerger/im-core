@@ -5,7 +5,7 @@ type LoadCallbackPayload<Response> = {
     readyState: number;
     response: Response;
 };
-type LoadCallback<T> = (payload: LoadCallbackPayload<T>) => unknown;
+type LoadCallback<Response> = (payload: LoadCallbackPayload<Response>) => unknown;
 type XHRRequestOptions = {
     timeout?: number;
     requestHeaders?: {
