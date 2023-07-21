@@ -16,7 +16,9 @@ type LoadCallbackPayload<Response> = {
   response: Response;
 };
 
-type LoadCallback<T> = (payload: LoadCallbackPayload<T>) => unknown;
+type LoadCallback<Response> = (
+  payload: LoadCallbackPayload<Response>
+) => unknown;
 
 type XHRRequestOptions = {
   timeout?: number;
@@ -64,10 +66,9 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
   const xhr = new XMLHttpRequest();
   xhr.open(method, url, asynchronous);
 
-  if (typeof responseType === 'string') xhr.responseType = responseType;
-
   xhr.withCredentials = withCredentials;
   if (typeof timeout === 'number') xhr.timeout = timeout;
+  if (typeof responseType === 'string') xhr.responseType = responseType;
 
   for (const name in requestHeaders) {
     const content = requestHeaders[name];
