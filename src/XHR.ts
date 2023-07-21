@@ -20,11 +20,15 @@ type LoadCallback<Response> = (
   payload: LoadCallbackPayload<Response>
 ) => unknown;
 
-type XHRRequestOptions = {
+type XHRRequestOptions<Response> = {
   timeout?: number;
   requestHeaders?: {[key: string]: string | string[]};
   withCredentials?: boolean;
   asynchronous?: boolean;
+  onLoadFailure?: LoadCallback<Response>;
+  onFailure?: (event: Event | LoadCallbackPayload<Response>) => unknown;
+  onError?: (event: Event) => unknown;
+  onTimeout?: (event: Event) => unknown;
 };
 
 type XHRParams<Response> = {
@@ -33,11 +37,7 @@ type XHRParams<Response> = {
   responseType?: XMLHttpRequestResponseType;
   body?: Document | XMLHttpRequestBodyInit | null;
   onLoadSuccess?: LoadCallback<Response>;
-  onLoadFailure?: LoadCallback<Response>;
-  onFailure?: (event: Event | LoadCallbackPayload<Response>) => unknown;
-  onError?: (event: Event) => unknown;
-  onTimeout?: (event: Event) => unknown;
-} & XHRRequestOptions;
+} & XHRRequestOptions<Response>;
 
 /**
  * Sends a request using XMLHttpRequest
@@ -118,7 +118,7 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
 export function get<Response>(
   url: string,
   onLoadSuccess: (payload: LoadCallbackPayload<Response>) => unknown,
-  xhrRequestOptions: XHRRequestOptions = {}
+  xhrRequestOptions: XHRRequestOptions<Response> = {}
 ) {
   return xhrRequest({
     url,
@@ -139,7 +139,7 @@ export function get<Response>(
 export function getData<Response>(
   url: string,
   onLoadSuccess: (data: Response) => unknown,
-  xhrRequestOptions: XHRRequestOptions = {}
+  xhrRequestOptions: XHRRequestOptions<Response> = {}
 ) {
   return xhrRequest<Response>({
     url,
@@ -168,7 +168,7 @@ export function post<Response>(
   url: string,
   body?: XMLHttpRequestBodyInit | null,
   onLoadSuccess?: LoadCallback<Response>,
-  xhrRequestOptions: XHRRequestOptions = {}
+  xhrRequestOptions: XHRRequestOptions<Response> = {}
 ) {
   // If body is a string type, the request header is set to `Content-Type: text/plain;charset=UTF-8`.
   return xhrRequest<Response>({
@@ -196,7 +196,7 @@ export function postDataAsJson<
   url: string,
   data: Request,
   onLoadSuccess?: LoadCallback<Response>,
-  xhrRequestOptions: XHRRequestOptions = {}
+  xhrRequestOptions: XHRRequestOptions<Response> = {}
 ) {
   return post<Response>(url, JSON.stringify(data), onLoadSuccess, {
     requestHeaders: {
@@ -222,7 +222,7 @@ export function postDataAsXWwwFormUrlEncoded<
   url: string,
   data: RequestBody,
   onLoadSuccess?: LoadCallback<Response>,
-  xhrRequestOptions: XHRRequestOptions = {}
+  xhrRequestOptions: XHRRequestOptions<Response> = {}
 ) {
   const urlSearchParams = new URLSearchParams();
   for (const name in data) {
@@ -249,7 +249,7 @@ export function postDataAsMultipartFormData<
   url: string,
   data: RequestBody,
   onLoadSuccess?: LoadCallback<Response>,
-  xhrRequestOptions: XHRRequestOptions = {}
+  xhrRequestOptions: XHRRequestOptions<Response> = {}
 ) {
   const formData = new FormData();
   for (const name in data) {
