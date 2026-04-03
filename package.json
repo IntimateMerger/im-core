@@ -12,23 +12,25 @@
   "scripts": {
     "lint": "gts lint",
     "clean": "gts clean",
-    "prebuild": "npm run lint",
-    "build": "npm run build:cjs && npm run build:esm",
+    "prebuild": "pnpm run lint",
+    "build": "pnpm run build:cjs && pnpm run build:esm",
     "build:cjs": "tsc --module CommonJS --outDir cjs",
     "build:esm": "tsc --module ES6 --outDir esm",
     "fix": "gts fix",
-    "prepare": "npm run build",
+    "prepare": "pnpm run build",
     "test-server": "node ./test-server/start.js"
   },
   "engines": {
-    "node": ">=16"
+    "node": "24.14.1"
   },
   "devDependencies": {
-    "@koa/router": "^12.0.0",
-    "@types/node": "^18.11.18",
-    "gts": "^3.1.1",
-    "koa": "^2.14.2",
-    "koa-static": "^5.0.0",
-    "typescript": "^5.0.4"
-  }
+    "@koa/router": "15.4.0",
+    "@types/node": "25.5.0",
+    "eslint": "10.1.0",
+    "gts": "7.0.0",
+    "koa": "3.1.2",
+    "koa-static": "5.0.0",
+    "typescript": "6.0.2"
+  },
+  "packageManager": "pnpm@10.33.0"
 }
