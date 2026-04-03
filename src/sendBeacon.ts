@@ -29,7 +29,7 @@ type AnyObjects = Record<string, unknown>; // ≒ {}
  */
 export function sendBeaconAsXWwwUrlEncoded<T extends AnyObjects>(
   url: string,
-  data: T
+  data: T,
 ) {
   const urlSearchParams = new URLSearchParams();
   for (const name in data) {
@@ -46,7 +46,7 @@ export function sendBeaconAsXWwwUrlEncoded<T extends AnyObjects>(
  */
 export function sendBeaconAsMultipartFormData<T extends AnyObjects>(
   url: string,
-  data: T
+  data: T,
 ) {
   const formData = new FormData();
   for (const name in data) {
