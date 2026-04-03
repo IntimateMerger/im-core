@@ -17,7 +17,7 @@ type LoadCallbackPayload<Response> = {
 };
 
 type LoadCallback<Response> = (
-  payload: LoadCallbackPayload<Response>
+  payload: LoadCallbackPayload<Response>,
 ) => unknown;
 
 type XHRRequestOptions<Response> = {
@@ -118,7 +118,7 @@ export function xhrRequest<Response>(params: XHRParams<Response>) {
 export function get<Response>(
   url: string,
   onLoadSuccess: (payload: LoadCallbackPayload<Response>) => unknown,
-  xhrRequestOptions: XHRRequestOptions<Response> = {}
+  xhrRequestOptions: XHRRequestOptions<Response> = {},
 ) {
   return xhrRequest({
     url,
@@ -139,7 +139,7 @@ export function get<Response>(
 export function getData<Response>(
   url: string,
   onLoadSuccess: (data: Response) => unknown,
-  xhrRequestOptions: XHRRequestOptions<Response> = {}
+  xhrRequestOptions: XHRRequestOptions<Response> = {},
 ) {
   return xhrRequest<Response>({
     url,
@@ -168,7 +168,7 @@ export function post<Response>(
   url: string,
   body?: XMLHttpRequestBodyInit | null,
   onLoadSuccess?: LoadCallback<Response>,
-  xhrRequestOptions: XHRRequestOptions<Response> = {}
+  xhrRequestOptions: XHRRequestOptions<Response> = {},
 ) {
   // If body is a string type, the request header is set to `Content-Type: text/plain;charset=UTF-8`.
   return xhrRequest<Response>({
@@ -191,12 +191,12 @@ export function post<Response>(
  */
 export function postDataAsJson<
   Request extends Record<string, unknown>,
-  Response
+  Response,
 >(
   url: string,
   data: Request,
   onLoadSuccess?: LoadCallback<Response>,
-  xhrRequestOptions: XHRRequestOptions<Response> = {}
+  xhrRequestOptions: XHRRequestOptions<Response> = {},
 ) {
   return post<Response>(url, JSON.stringify(data), onLoadSuccess, {
     requestHeaders: {
@@ -217,12 +217,12 @@ export function postDataAsJson<
  */
 export function postDataAsXWwwFormUrlEncoded<
   RequestBody extends Record<string, unknown>,
-  Response
+  Response,
 >(
   url: string,
   data: RequestBody,
   onLoadSuccess?: LoadCallback<Response>,
-  xhrRequestOptions: XHRRequestOptions<Response> = {}
+  xhrRequestOptions: XHRRequestOptions<Response> = {},
 ) {
   const urlSearchParams = new URLSearchParams();
   for (const name in data) {
@@ -244,12 +244,12 @@ export function postDataAsXWwwFormUrlEncoded<
  */
 export function postDataAsMultipartFormData<
   RequestBody extends Record<string, string | Blob>,
-  Response
+  Response,
 >(
   url: string,
   data: RequestBody,
   onLoadSuccess?: LoadCallback<Response>,
-  xhrRequestOptions: XHRRequestOptions<Response> = {}
+  xhrRequestOptions: XHRRequestOptions<Response> = {},
 ) {
   const formData = new FormData();
   for (const name in data) {

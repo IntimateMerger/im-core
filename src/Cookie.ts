@@ -25,7 +25,7 @@ export function getCookie(key: string): string | null {
 export function setCookie(
   key: string,
   value: string,
-  options: SetCookieOption = {}
+  options: SetCookieOption = {},
 ) {
   const {path, domain, maxAge, expires, secure, sameSite} = options;
 
@@ -47,7 +47,7 @@ export function deleteCookie(
     domain?: string;
     secure?: boolean;
     sameSite?: 'strict' | 'lax' | 'none';
-  } = {}
+  } = {},
 ) {
   setCookie(key, '', {
     maxAge: 0,
@@ -68,7 +68,7 @@ export function getCookieAs<T = unknown>(key: string): T | null {
 export function setCookieAs<T = unknown>(
   key: string,
   value: T,
-  options: SetCookieOption = {}
+  options: SetCookieOption = {},
 ) {
   setCookie(key, encodeURIComponent(JSON.stringify(value)), options);
 }
