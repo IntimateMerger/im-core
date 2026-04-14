@@ -4,6 +4,6 @@ import gts from 'gts';
 export default defineConfig([
   ...gts,
   {
-    ignores: ['cjs/', 'esm/'],
+    ignores: ['cjs/', 'esm/', 'test-server/'],
   },
 ]);
