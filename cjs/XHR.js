@@ -11,7 +11,13 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postDataAsMultipartFormData = exports.postDataAsXWwwFormUrlEncoded = exports.postDataAsJson = exports.post = exports.getData = exports.get = exports.xhrRequest = void 0;
+exports.xhrRequest = xhrRequest;
+exports.get = get;
+exports.getData = getData;
+exports.post = post;
+exports.postDataAsJson = postDataAsJson;
+exports.postDataAsXWwwFormUrlEncoded = postDataAsXWwwFormUrlEncoded;
+exports.postDataAsMultipartFormData = postDataAsMultipartFormData;
 /**
  * Sends a request using XMLHttpRequest
  * @param params - withCredentials and asynchronous are true if not set.
@@ -72,7 +78,6 @@ function xhrRequest(params) {
     xhr.send(body);
     return xhr;
 }
-exports.xhrRequest = xhrRequest;
 /**
  * Sends a GET request using XMLHttpRequest
  * @param url
@@ -83,7 +88,6 @@ function get(url, onLoadSuccess, xhrRequestOptions) {
     if (xhrRequestOptions === void 0) { xhrRequestOptions = {}; }
     return xhrRequest(__assign({ url: url, method: 'GET', onLoadSuccess: onLoadSuccess }, xhrRequestOptions));
 }
-exports.get = get;
 /**
  * Use XMLHttpRequest and send the request with the GET method.
  * Set the request header to `Accept: application/json`.
@@ -99,7 +103,6 @@ function getData(url, onLoadSuccess, xhrRequestOptions) {
             onLoadSuccess(data);
         } }, xhrRequestOptions), { requestHeaders: __assign(__assign({}, xhrRequestOptions.requestHeaders), { Accept: 'application/json' }) }));
 }
-exports.getData = getData;
 /**
  * Use XMLHttpRequest and send data with the POST method.
  * @param url
@@ -112,7 +115,6 @@ function post(url, body, onLoadSuccess, xhrRequestOptions) {
     // If body is a string type, the request header is set to `Content-Type: text/plain;charset=UTF-8`.
     return xhrRequest(__assign({ url: url, method: 'POST', body: body, onLoadSuccess: onLoadSuccess }, xhrRequestOptions));
 }
-exports.post = post;
 /**
  * Use XMLHttpRequest to send data in JSON format using the POST method.
  * Set the request header to `Content-Type: application/json`.
@@ -126,7 +128,6 @@ function postDataAsJson(url, data, onLoadSuccess, xhrRequestOptions) {
     if (xhrRequestOptions === void 0) { xhrRequestOptions = {}; }
     return post(url, JSON.stringify(data), onLoadSuccess, __assign({ requestHeaders: __assign(__assign({}, xhrRequestOptions.requestHeaders), { 'Content-Type': 'application/json' }) }, xhrRequestOptions));
 }
-exports.postDataAsJson = postDataAsJson;
 /**
  * Use XMLHttpRequest to send data in application/x-www-form-urlencoded format using the POST method.
  * The request header is set to `Content-Type: application/x-www-form-urlencoded;charset=UTF-8`.
@@ -144,7 +145,6 @@ function postDataAsXWwwFormUrlEncoded(url, data, onLoadSuccess, xhrRequestOption
     // If the URLSearchParams type is set in body, the request header is set to `Content-Type: application/x-www-form-urlencoded;charset=UTF-8`.
     return post(url, urlSearchParams, onLoadSuccess, xhrRequestOptions);
 }
-exports.postDataAsXWwwFormUrlEncoded = postDataAsXWwwFormUrlEncoded;
 /**
  * Use XMLHttpRequest to send data in multipart/form-data format using the POST method.
  * The request header is set to `Content-Type: multipart/form-data; boundary=... ` is set in the request header.
@@ -163,5 +163,4 @@ function postDataAsMultipartFormData(url, data, onLoadSuccess, xhrRequestOptions
     // If the body is set to the FormData type, the request header is set to `Content-Type: multipart/form-data; boundary=... ` is set in the request header.
     return post(url, formData, onLoadSuccess, xhrRequestOptions);
 }
-exports.postDataAsMultipartFormData = postDataAsMultipartFormData;
 //# sourceMappingURL=XHR.js.map
