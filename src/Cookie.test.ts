@@ -1,4 +1,4 @@
-import {describe, it, expect, beforeEach} from 'vitest';
+import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {
   getCookie,
   setCookie,
@@ -50,6 +50,34 @@ describe('Cookie', () => {
     it('option (path / sameSite) を付与しても値は取得できる', () => {
       setCookie('foo', 'bar', {path: '/', sameSite: 'lax'});
       expect(getCookie('foo')).toBe('bar');
+    });
+
+    it('expires オプション (Date) を渡すと cookie に反映される', () => {
+      // jsdom は cookie の expires 属性自体は直接読めないため、
+      // document.cookie への書き込み文字列を spy で確認する。
+      const spy = vi.spyOn(document, 'cookie', 'set');
+      const future = new Date('2099-12-31T00:00:00Z');
+      setCookie('foo', 'bar', {expires: future});
+      expect(spy).toHaveBeenCalledWith(
+        expect.stringContaining(`expires=${future.toUTCString()}`)
+      );
+      spy.mockRestore();
+    });
+
+    it('secure オプションを渡すと cookie 文字列に ;secure が含まれる', () => {
+      const spy = vi.spyOn(document, 'cookie', 'set');
+      setCookie('foo', 'bar', {secure: true});
+      expect(spy).toHaveBeenCalledWith(expect.stringContaining(';secure'));
+      spy.mockRestore();
+    });
+
+    it('sameSite オプションを渡すと cookie 文字列に samesite= が含まれる', () => {
+      const spy = vi.spyOn(document, 'cookie', 'set');
+      setCookie('foo', 'bar', {sameSite: 'strict'});
+      expect(spy).toHaveBeenCalledWith(
+        expect.stringContaining(';samesite=strict')
+      );
+      spy.mockRestore();
     });
   });
 

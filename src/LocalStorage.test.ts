@@ -1,4 +1,4 @@
-import {describe, it, expect, beforeEach} from 'vitest';
+import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
 import {getItem, setItem, removeItem, getValue, setValue} from './LocalStorage';
 
 describe('LocalStorage', () => {
@@ -28,6 +28,23 @@ describe('LocalStorage', () => {
       setItem('foo', 'bar');
       removeItem('foo');
       expect(getItem('foo')).toBeNull();
+    });
+  });
+
+  describe('setItem の容量超過 / 例外', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it('localStorage.setItem が throw しても例外を伝播しない (console.error で吸収)', () => {
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+        throw new Error('QuotaExceededError');
+      });
+      expect(() => setItem('foo', 'bar')).not.toThrow();
+      expect(consoleSpy).toHaveBeenCalledTimes(1);
     });
   });
 

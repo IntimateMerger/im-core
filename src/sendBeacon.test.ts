@@ -97,4 +97,49 @@ describe('sendBeacon', () => {
       expect(blob.type).toBe('application/json');
     });
   });
+
+  describe('navigator.sendBeacon が無い環境での XHR フォールバック', () => {
+    let originalXHR: typeof XMLHttpRequest;
+    let xhrSendSpy: ReturnType<typeof vi.fn>;
+
+    beforeEach(() => {
+      // navigator.sendBeacon を未定義にする
+      Object.defineProperty(navigator, 'sendBeacon', {
+        configurable: true,
+        value: undefined,
+      });
+      // XMLHttpRequest を spy 可能な fake に差し替え
+      originalXHR = globalThis.XMLHttpRequest;
+      xhrSendSpy = vi.fn();
+      class FakeXHR {
+        open = vi.fn();
+        setRequestHeader = vi.fn();
+        addEventListener = vi.fn();
+        send = xhrSendSpy;
+        withCredentials = false;
+      }
+      // @ts-expect-error replacing global
+      globalThis.XMLHttpRequest = FakeXHR;
+    });
+
+    afterEach(() => {
+      globalThis.XMLHttpRequest = originalXHR;
+    });
+
+    it('post() 経由で XHR 送信 + true を返す', () => {
+      const ok = sendBeacon('https://example.com/log', 'payload');
+      expect(xhrSendSpy).toHaveBeenCalledTimes(1);
+      expect(xhrSendSpy).toHaveBeenCalledWith('payload');
+      expect(ok).toBe(true);
+    });
+
+    it('XHR 構築で例外が出たら false を返す', () => {
+      // @ts-expect-error replacing global
+      globalThis.XMLHttpRequest = function () {
+        throw new Error('XHR not available');
+      };
+      const ok = sendBeacon('https://example.com/log', 'payload');
+      expect(ok).toBe(false);
+    });
+  });
 });

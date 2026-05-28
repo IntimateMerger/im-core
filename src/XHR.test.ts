@@ -182,6 +182,14 @@ describe('getData', () => {
     expect(last.responseType).toBe('json');
     expect(last.headers['Accept']).toEqual(['application/json']);
   });
+
+  it('成功時に response を data として onLoadSuccess に渡す', () => {
+    const onLoadSuccess = vi.fn();
+    getData<{x: number}>('https://example.com/a', onLoadSuccess);
+    last.simulateLoad(200, {x: 42});
+    expect(onLoadSuccess).toHaveBeenCalledTimes(1);
+    expect(onLoadSuccess).toHaveBeenCalledWith({x: 42});
+  });
 });
 
 describe('post', () => {
