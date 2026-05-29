@@ -1,5 +1,5 @@
 {
-  "name": "@intimatemerger/im-core",
+  "name": "@intimatemerger-internal/im-core",
   "version": "0.2.3",
   "license": "MIT",
   "main": "./cjs/index.js",
@@ -21,7 +21,8 @@
     "test-server": "node ./test-server/start.js",
     "test": "npm run test:vitest",
     "test:vitest": "vitest run",
-    "test:vitest:watch": "vitest"
+    "test:vitest:watch": "vitest",
+    "artifactregistry-login": "npx google-artifactregistry-auth"
   },
   "engines": {
     "node": ">=16"
