@@ -23,7 +23,7 @@ describe('sendBeacon', () => {
       const ok = sendBeacon('https://example.com/log', 'payload');
       expect(navigator.sendBeacon).toHaveBeenCalledWith(
         'https://example.com/log',
-        'payload'
+        'payload',
       );
       expect(ok).toBe(true);
     });
@@ -32,7 +32,7 @@ describe('sendBeacon', () => {
       sendBeacon('https://example.com/log');
       expect(navigator.sendBeacon).toHaveBeenCalledWith(
         'https://example.com/log',
-        undefined
+        undefined,
       );
     });
   });

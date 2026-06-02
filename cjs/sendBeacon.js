@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendBeaconAsJson = exports.sendBeaconAsMultipartFormData = exports.sendBeaconAsXWwwUrlEncoded = exports.sendBeacon = void 0;
+exports.sendBeacon = sendBeacon;
+exports.sendBeaconAsXWwwUrlEncoded = sendBeaconAsXWwwUrlEncoded;
+exports.sendBeaconAsMultipartFormData = sendBeaconAsMultipartFormData;
+exports.sendBeaconAsJson = sendBeaconAsJson;
 var XHR_1 = require("./XHR");
 /**
  * Call navigator.sendBeacon, fallback to XHR for legacy browsers.
@@ -13,7 +16,7 @@ function sendBeacon(url, body) {
     }
     else {
         try {
-            (0, XHR_1.post)(url, body, void 0, { asynchronous: false, withCredentials: true });
+            (0, XHR_1.post)(url, body, void 0, { asynchronous: true, withCredentials: true });
             return true;
         }
         catch (_a) {
@@ -21,7 +24,6 @@ function sendBeacon(url, body) {
         }
     }
 }
-exports.sendBeacon = sendBeacon;
 /**
  * Convert data to URLSearchParams, execute sendBeacon function, and send data as application/x-www-form-urlencoded.
  * @param url
@@ -34,7 +36,6 @@ function sendBeaconAsXWwwUrlEncoded(url, data) {
     }
     return sendBeacon(url, urlSearchParams);
 }
-exports.sendBeaconAsXWwwUrlEncoded = sendBeaconAsXWwwUrlEncoded;
 /**
  * Convert data to FormData, execute sendBeacon function, and send data as multipart/form-data.
  * @param url
@@ -47,7 +48,6 @@ function sendBeaconAsMultipartFormData(url, data) {
     }
     return sendBeacon(url, formData);
 }
-exports.sendBeaconAsMultipartFormData = sendBeaconAsMultipartFormData;
 /**
  * Convert the data to JSON.stringify and Blob, execute the sendBeacon function, and send the data as application/json.
  * @param url
@@ -57,5 +57,4 @@ function sendBeaconAsJson(url, data) {
     var blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
     return sendBeacon(url, blob);
 }
-exports.sendBeaconAsJson = sendBeaconAsJson;
 //# sourceMappingURL=sendBeacon.js.map

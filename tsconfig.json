@@ -3,6 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "rootDir": "src",
+    "ignoreDeprecations": "6.0",
+    "composite": false,
     "target": "ES5",
     "lib": ["DOM", "ES6"],
     "outDir": "dist"

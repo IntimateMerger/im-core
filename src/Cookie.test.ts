@@ -59,7 +59,7 @@ describe('Cookie', () => {
       const future = new Date('2099-12-31T00:00:00Z');
       setCookie('foo', 'bar', {expires: future});
       expect(spy).toHaveBeenCalledWith(
-        expect.stringContaining(`expires=${future.toUTCString()}`)
+        expect.stringContaining(`expires=${future.toUTCString()}`),
       );
       spy.mockRestore();
     });
@@ -75,7 +75,7 @@ describe('Cookie', () => {
       const spy = vi.spyOn(document, 'cookie', 'set');
       setCookie('foo', 'bar', {sameSite: 'strict'});
       expect(spy).toHaveBeenCalledWith(
-        expect.stringContaining(';samesite=strict')
+        expect.stringContaining(';samesite=strict'),
       );
       spy.mockRestore();
     });

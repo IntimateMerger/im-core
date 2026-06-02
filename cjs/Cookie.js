@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setCookieAs = exports.getCookieAs = exports.deleteCookie = exports.setCookie = exports.getCookie = void 0;
+exports.getCookie = getCookie;
+exports.setCookie = setCookie;
+exports.deleteCookie = deleteCookie;
+exports.getCookieAs = getCookieAs;
+exports.setCookieAs = setCookieAs;
 function getCookie(key) {
     var keyPrefix = "".concat(key, "=");
     var charCount = keyPrefix.length;
@@ -13,7 +17,6 @@ function getCookie(key) {
     }
     return null;
 }
-exports.getCookie = getCookie;
 function setCookie(key, value, options) {
     if (options === void 0) { options = {}; }
     var path = options.path, domain = options.domain, maxAge = options.maxAge, expires = options.expires, secure = options.secure, sameSite = options.sameSite;
@@ -32,7 +35,6 @@ function setCookie(key, value, options) {
         request += ";samesite=".concat(sameSite);
     document.cookie = request;
 }
-exports.setCookie = setCookie;
 function deleteCookie(key, options) {
     if (options === void 0) { options = {}; }
     setCookie(key, '', {
@@ -43,17 +45,14 @@ function deleteCookie(key, options) {
         sameSite: options.sameSite,
     });
 }
-exports.deleteCookie = deleteCookie;
 function getCookieAs(key) {
     var value = getCookie(key);
     if (value)
         return JSON.parse(decodeURIComponent(value));
     return null;
 }
-exports.getCookieAs = getCookieAs;
 function setCookieAs(key, value, options) {
     if (options === void 0) { options = {}; }
     setCookie(key, encodeURIComponent(JSON.stringify(value)), options);
 }
-exports.setCookieAs = setCookieAs;
 //# sourceMappingURL=Cookie.js.map

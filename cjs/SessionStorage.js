@@ -1,13 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setValue = exports.getValue = exports.removeItem = exports.setItem = exports.getItem = void 0;
+exports.getItem = getItem;
+exports.setItem = setItem;
+exports.removeItem = removeItem;
+exports.getValue = getValue;
+exports.setValue = setValue;
 function getItem(key) {
     if (sessionStorage)
         return sessionStorage.getItem(key);
     else
         return null;
 }
-exports.getItem = getItem;
 function setItem(key, value) {
     try {
         sessionStorage.setItem(key, value);
@@ -16,12 +19,10 @@ function setItem(key, value) {
         console.error(e);
     }
 }
-exports.setItem = setItem;
 function removeItem(key) {
     if (sessionStorage)
         sessionStorage.removeItem(key);
 }
-exports.removeItem = removeItem;
 function getValue(key) {
     var value = getItem(key);
     if (value)
@@ -29,9 +30,7 @@ function getValue(key) {
     else
         return null;
 }
-exports.getValue = getValue;
 function setValue(key, value) {
     setItem(key, JSON.stringify(value));
 }
-exports.setValue = setValue;
 //# sourceMappingURL=SessionStorage.js.map
