@@ -1,9 +1,9 @@
 {
   "name": "@intimatemerger-internal/im-core",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "main": "./cjs/index.js",
-  "types": "./cjs/index.d.js",
+  "types": "./cjs/index.d.ts",
   "files": [
     "cjs",
     "esm"
