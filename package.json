@@ -1,9 +1,39 @@
 {
   "name": "@intimatemerger-internal/im-core",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "license": "MIT",
   "main": "./cjs/index.js",
-  "types": "./cjs/index.d.ts",
+  "module": "./esm/index.js",
+  "types": "./esm/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./esm/index.d.ts",
+        "default": "./esm/index.js"
+      },
+      "require": {
+        "types": "./cjs/index.d.ts",
+        "default": "./cjs/index.js"
+      }
+    },
+    "./esm": {
+      "types": "./esm/index.d.ts",
+      "default": "./esm/index.js"
+    },
+    "./esm/*": {
+      "types": "./esm/*.d.ts",
+      "default": "./esm/*.js"
+    },
+    "./cjs": {
+      "types": "./cjs/index.d.ts",
+      "default": "./cjs/index.js"
+    },
+    "./cjs/*": {
+      "types": "./cjs/*.d.ts",
+      "default": "./cjs/*.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "cjs",
     "esm"
