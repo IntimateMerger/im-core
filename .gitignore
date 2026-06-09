@@ -91,6 +91,10 @@ out
 .nuxt
 dist
 
+# build artifacts (pnpm build / CI publish で生成。commit しない)
+cjs/
+esm/
+
 # Gatsby files
 .cache/
 # Comment in the public line in if your project uses Gatsby and not Next.js
