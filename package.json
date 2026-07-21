@@ -55,7 +55,7 @@
     "artifactregistry-login": "npx google-artifactregistry-auth"
   },
   "engines": {
-    "node": "24.14.1"
+    "node": ">=24.14.1 <25"
   },
   "devDependencies": {
     "@koa/router": "15.4.0",
