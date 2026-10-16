@@ -5,6 +5,8 @@
     "rootDir": "src",
     "ignoreDeprecations": "6.0",
     "composite": false,
+    // gts の設定は composite: true で declaration を有効にしているため、composite を切ると .d.ts が出力されなくなる
+    "declaration": true,
     "target": "ES5",
     "lib": ["DOM", "ES6"],
     "outDir": "dist"
