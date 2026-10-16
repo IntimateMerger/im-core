@@ -7,10 +7,6 @@ minimumReleaseAgeExclude:
   - '@esbuild/*'
   - form-data
   - tmp
-  # brace-expansion 5.0.8 / js-yaml 5.2.2 (いずれも 2026-07-23 公開) が
-  # minimumReleaseAge (7日) を超えたら削除すること -> 2026-07-31 以降
-  - brace-expansion
-  - js-yaml
 overrides:
   tmp@<0.2.7: '>=0.2.7 <1.0.0'
   esbuild@<0.28.1: '>=0.28.1 <1.0.0'
